@@ -6,7 +6,7 @@ APIs that backend service provides to frontend.
 
 **Description：** 
 
-- User register
+- New user registeration
 
 **Request URL：** 
 - ` http://www.gitguddojo.com/api/user/register `
@@ -14,13 +14,29 @@ APIs that backend service provides to frontend.
 **Request Method：**
 - POST 
 
-**Parameters：** 
+**Request：** 
 
 |Parameter|Required|Type|Comment|
 |:----    |:---|:----- |-----   |
 |username |Y  |string | User name   |
 |password |Y  |string | password    |
 |name     |N  |string | nick name    |
+
+ **Request Sample**
+
+``` 
+  {
+    "userName": "eirc+user+name",
+    "password": "xxxxxxxxxx",
+    "name": "Eric
+  }
+```
+
+ **Response** 
+
+|Parameter|Type|Comment|
+|:-----  |:-----|-----                           |
+|uid |int   |user ID  |
 
  **Response Sample**
 
@@ -36,12 +52,6 @@ APIs that backend service provides to frontend.
     }
   }
 ```
-
- **Response parameters Description** 
-
-|Parameter|Type|Comment|
-|:-----  |:-----|-----                           |
-|uid |int   |user ID  |
 
  **Comments** 
 
