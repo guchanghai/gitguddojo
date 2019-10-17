@@ -1,4 +1,4 @@
-<detail>
+<details>
 
 <summary>Users</summary>
 
@@ -45,5 +45,5 @@
 
 - This API doesn't support Google/Facebook/AppID login
 
-</detail>
+</details>
 
