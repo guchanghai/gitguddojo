@@ -6,7 +6,7 @@ APIs that backend service provides to frontend.
 
 **Description：** 
 
-- New user registeration
+- New user registration
 
 **Request URL：** 
 - ` http://www.gitguddojo.com/api/user/register `
