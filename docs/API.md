@@ -1,6 +1,10 @@
+<detail>
+
+<summary>Users</summary>
+
 **Description：** 
 
-- User regiester
+- User register
 
 **Request URL：** 
 - ` http://www.gitguddojo.com/api/user/register `
@@ -41,4 +45,5 @@
 
 - This API doesn't support Google/Facebook/AppID login
 
+</detail>
 
