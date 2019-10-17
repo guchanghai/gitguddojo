@@ -1,6 +1,12 @@
+APIs that backend service provides to frontend.
+
 <details>
 
 <summary>Users</summary>
+
+<details>
+
+<summary>User register</summary>
 
 **Description：** 
 
@@ -44,6 +50,8 @@
  **Comments** 
 
 - This API doesn't support Google/Facebook/AppID login
+
+</details> <!-- end of Users section -->
 
 </details>
 
