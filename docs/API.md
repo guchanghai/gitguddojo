@@ -22,8 +22,8 @@ APIs that backend service provides to frontend.
 |:----    |:---|:----- |-----   |
 |user_name |Y  |string | User name   |
 |password |Y  |string | password    |
-|email     |N  |string | User eamil   |
-|stream_id     |N  |string | stream ID    |
+|email     |Y  |string | User eamil   |
+|stream_id     |Y  |string | stream ID    |
 
  **Request Sample**
 
@@ -117,6 +117,57 @@ APIs that backend service provides to frontend.
  **Comments** 
 
 - This API doesn't support Google/Facebook/AppID login
+
+</details>
+
+<!-- -------------------------------- User logout -------------------------------- -->
+
+<details>
+
+<summary>User logout</summary>
+
+**Description：** 
+
+- User logout
+
+**Request URL：** 
+- ` http://www.gitguddojo.com/api/user/logout `
+  
+**Request Method：**
+- POST 
+
+**Request：** 
+
+|Parameter|Required|Type|Comment|
+|:----    |:---|:----- |-----   |
+|user_name |Y  |string | User name   |
+|token |string   |user access token  |
+
+ **Request Sample**
+
+``` 
+  {
+    "user_name": "eirc+user+name",
+    "token": "user_token_in_base64_encoding"
+  }
+```
+
+**Response** 
+
+|Parameter|Type|Comment|
+|:-----  |:-----|----- |
+
+ **Response Sample**
+
+``` 
+  {
+    "error_code": 0
+  }
+```
+
+ **Comments** 
+
+- This is to invalide the login token
 
 </details>
 
