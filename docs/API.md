@@ -22,7 +22,8 @@ APIs that backend service provides to frontend.
 |:----    |:---|:----- |-----   |
 |user_name |Y  |string | User name   |
 |password |Y  |string | password    |
-|name     |N  |string | nick name    |
+|email     |N  |string | User eamil   |
+|stream_id     |N  |string | stream ID    |
 
  **Request Sample**
 
@@ -30,7 +31,8 @@ APIs that backend service provides to frontend.
   {
     "user_name": "eirc+user+name",
     "password": "xxxxxxxxxx",
-    "name": "Eric
+    "email": "xx@yy.com",
+    "stream_id": "xb"
   }
 ```
 
