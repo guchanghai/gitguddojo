@@ -11,7 +11,8 @@
       <b-row class="sign-up-item terms">
         <b-col>By clicking Sign Up, you agreed to our Terms of use.</b-col>
       </b-row>
-      <sign-up-options />
+      <!-- sign-up-options /-->
+      <sign-up-with-email />
     </div>
   </b-modal>
 </template>
@@ -19,10 +20,12 @@
 <script>
   import { App } from '../constant/app-constants';
   import signUpOptions from '../components/sign-up-options';
+  import signUpWithEmail from '../components/sign-up-with-email';
 
   export default {
     components: {
-      signUpOptions
+      signUpOptions,
+      signUpWithEmail
     },
     data(){
       return {
