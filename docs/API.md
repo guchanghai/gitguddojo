@@ -118,6 +118,65 @@ APIs that backend service provides to frontend.
 
 </details>
 
+<!-- -------------------------------- User profile -------------------------------- -->
+
+<details>
+
+<summary>User profile</summary>
+
+**Description：** 
+
+- Get detail info of one specific user
+
+**Request URL：** 
+- ` http://www.gitguddojo.com/api/user/profile `
+  
+**Request Method：**
+- GET 
+
+**Request：** 
+
+|Parameter|Required|Type|Comment|
+|:----    |:---|:----- |-----   |
+|user_name |Y  |string | User name   |
+|token |Y  |string | User access token    |
+
+ **Request Sample**
+
+``` 
+  {
+    "user_name": "eirc+user+name",
+    "token": "user_token_in_base64_encoding"
+  }
+```
+
+**Response** 
+
+|Parameter|Type|Comment|
+|:-----  |:-----|----- |
+|user_name |int   |user name  |
+|game_level |string   |user game level  |
+|game_role |string   |last game role|
+
+ **Response Sample**
+
+```
+  {
+    "error_code": 0,
+    "data": {
+      "user_name": "eric",
+      "game_level": "14",
+      "game_role": "0"
+    }
+  }
+```
+
+ **Comments** 
+
+- Currently just for current user. But we can expant to all the users
+
+</details>
+
 <!-- -------------------------------- User recommendation -------------------------------- -->
 
 <details>
