@@ -11,24 +11,19 @@
       <b-row class="sign-up-item terms">
         <b-col>By clicking Sign Up, you agreed to our Terms of use.</b-col>
       </b-row>
-      <b-row class="sign-up-item with-email">
-        <b-button variant="danger" class="log-name-button sign-button" v-b-modal.sign-up-modal>Sign Up with Email</b-button>
-      <b-col></b-col>
-      </b-row>
-      <b-row class="sign-up-item with-facebook">
-        <b-button variant="primary" class="log-name-button sign-button " v-b-modal.sign-up-modal>Sign Up with Facebook</b-button>
-      </b-row>
-      <b-row class="sign-up-item with-google">
-        <b-button variant="primary" class="log-name-button sign-button" v-b-modal.sign-up-modal>Sign Up with Google</b-button>
-      </b-row>
+      <sign-up-options />
     </div>
   </b-modal>
 </template>
 
 <script>
   import { App } from '../constant/app-constants';
+  import signUpOptions from '../components/sign-up-options';
 
   export default {
+    components: {
+      signUpOptions
+    },
     data(){
       return {
         logoName: App.APP_NAME
