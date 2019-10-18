@@ -1,5 +1,7 @@
 APIs that backend service provides to frontend.
 
+<!-- -------------------------------- User Associated -------------------------------- -->
+
 <details>
 
 <summary>User register</summary>
@@ -115,3 +117,69 @@ APIs that backend service provides to frontend.
 - This API doesn't support Google/Facebook/AppID login
 
 </details>
+
+<!-- -------------------------------- User recommendation -------------------------------- -->
+
+<details>
+
+<summary>User recommendation</summary>
+
+**Description：** 
+
+- Get list of recommended users for the current user
+
+**Request URL：** 
+- ` http://www.gitguddojo.com/api/user/recommendation `
+  
+**Request Method：**
+- GET 
+
+**Request：** 
+
+|Parameter|Required|Type|Comment|
+|:----    |:---|:----- |-----   |
+|user_name |Y  |string | User name   |
+|token |Y  |string | User access token    |
+
+ **Request Sample**
+
+``` 
+  {
+    "user_name": "eirc+user+name",
+    "token": "user_token_in_base64_encoding"
+  }
+```
+
+**Response** 
+
+|Parameter|Type|Comment|
+|:-----  |:-----|----- |
+|user_name |int   |user name  |
+|game_level |string   |user game level  |
+|game_role |string   |last game role|
+
+ **Response Sample**
+
+```
+  {
+    "error_code": 0,
+    "data": [{
+      "user_name": "eric",
+      "game_level": "14",
+      "game_role": "0"
+    },
+    {
+      "user_name": "lin",
+      "game_level": "13",
+      "game_role": "0"
+    }
+    ]
+  }
+```
+
+ **Comments** 
+
+- Response data is an array of users
+
+</details>
+
