@@ -9,15 +9,15 @@
 </template>
 
 <script>
-  import Foot from './foot';
-  import Navigator from './navigator';
-  import SignUp from './signup';
+  import foot from '../components/foot';
+  import navigator from '../components/navigator';
+  import signUp from '../components/sign-up';
 
   export default {
     components: {
-      Foot,
-      Navigator,
-      SignUp
+      foot,
+      navigator,
+      signUp
     }
   }
 </script>
@@ -30,7 +30,7 @@
     left:0;
     right:0;
     margin: 0 auto;
-    background: url('../assets/r6_background.svg');
+    background: url('../assets/r6-background.svg');
     background-size: cover;
   }
 

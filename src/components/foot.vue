@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import { App } from '../constant/appConstants';
+  import { App } from '../constant/app-constants';
 
   export default {
     data(){

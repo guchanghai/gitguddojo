@@ -5,15 +5,15 @@
 </template>
 
 <script>
-  import { App } from './constant/appConstants';
-import Landing from './components/landing.vue'
+  import { App } from './constant/app-constants';
+  import landing from './pages/landing.vue'
 
-export default {
-  name: App.APP_NAME,
-  components: {
-    Landing
+  export default {
+    name: App.APP_NAME,
+    components: {
+      landing
+    }
   }
-}
 </script>
 
 <style>
