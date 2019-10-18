@@ -18,7 +18,7 @@ APIs that backend service provides to frontend.
 
 |Parameter|Required|Type|Comment|
 |:----    |:---|:----- |-----   |
-|username |Y  |string | User name   |
+|user_name |Y  |string | User name   |
 |password |Y  |string | password    |
 |name     |N  |string | nick name    |
 
@@ -26,7 +26,7 @@ APIs that backend service provides to frontend.
 
 ``` 
   {
-    "userName": "eirc+user+name",
+    "user_name": "eirc+user+name",
     "password": "xxxxxxxxxx",
     "name": "Eric
   }
@@ -37,6 +37,8 @@ APIs that backend service provides to frontend.
 |Parameter|Type|Comment|
 |:-----  |:-----|-----                           |
 |uid |int   |user ID  |
+|token |string   |user access token  |
+|reg_time |string   |user register time  |
 
  **Response Sample**
 
@@ -45,10 +47,8 @@ APIs that backend service provides to frontend.
     "error_code": 0,
     "data": {
       "uid": "1",
-      "username": "12154545",
-      "name": "Eric",
-      "reg_time": "1436864169",
-      "last_login_time": "0"
+      "token": "user_token_in_base64_encoding",
+      "reg_time": "1436864169"
     }
   }
 ```
@@ -77,23 +77,25 @@ APIs that backend service provides to frontend.
 
 |Parameter|Required|Type|Comment|
 |:----    |:---|:----- |-----   |
-|username |Y  |string | User name   |
+|user_name |Y  |string | User name   |
 |password |Y  |string | password    |
 
  **Request Sample**
 
 ``` 
   {
-    "userName": "eirc+user+name",
+    "user_name": "eirc+user+name",
     "password": "xxxxxxxxxx"
   }
 ```
 
- **Response** 
+**Response** 
 
 |Parameter|Type|Comment|
-|:-----  |:-----|-----                           |
+|:-----  |:-----|----- |
+|uid |int   |user ID  |
 |token |string   |user access token  |
+|last_login_time |string   |last login time|
 
  **Response Sample**
 
@@ -101,6 +103,7 @@ APIs that backend service provides to frontend.
   {
     "error_code": 0,
     "data": {
+      "uid": "1",
       "token": "user_token_in_base64_encoding",
       "last_login_time": "0"
     }
