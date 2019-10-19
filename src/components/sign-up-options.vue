@@ -1,7 +1,7 @@
 <template>
   <div class="sign-up-options">
     <b-row class="sign-up-item with-email">
-      <b-button variant="danger" class="log-name-button sign-button">Sign Up with Email</b-button>
+      <b-button variant="danger" class="log-name-button sign-button" @click="onSignUpWithEmail">Sign Up with Email</b-button>
     </b-row>
     <b-row class="sign-up-item with-facebook">
       <b-button variant="primary" class="log-name-button sign-button ">Sign Up with Facebook</b-button>
@@ -16,6 +16,11 @@
   export default {
     data(){
       return {
+      }
+    },
+    methods: {
+      onSignUpWithEmail(){
+        this.$emit( 'signUpOptions', 'signUpWithEmail' );
       }
     }
   }

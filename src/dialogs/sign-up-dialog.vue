@@ -1,6 +1,6 @@
 <template>
   <!-- Sign Up Modal dialog -->
-  <b-modal id="sign-up-modal" centered hide-footer>
+  <b-modal id="sign-up-modal" @show="initOptions" centered hide-footer>
     <div class="sign-up-content">
       <b-row class="sign-up-item log-name">
         <b-button variant="danger" class="log-name-button sign-button" v-b-modal.sign-up-modal>{{this.logoName}}!</b-button>
@@ -11,8 +11,8 @@
       <b-row class="sign-up-item terms">
         <b-col>By clicking Sign Up, you agreed to our Terms of use.</b-col>
       </b-row>
-      <!-- sign-up-options /-->
-      <sign-up-with-email />
+      <sign-up-options @signUpOptions="onSignUpOptions" v-if="!signUpOption"/>
+      <sign-up-with-email v-else-if="signUpOption === 'signUpWithEmail'"/>
     </div>
   </b-modal>
 </template>
@@ -29,7 +29,16 @@
     },
     data(){
       return {
-        logoName: App.APP_NAME
+        logoName: App.APP_NAME,
+        signUpOption: ''
+      }
+    },
+    methods: {
+      initOptions(){
+        this.signUpOption = '';
+      },
+      onSignUpOptions( option ) {
+        this.signUpOption = option;
       }
     }
   }
