@@ -4,9 +4,7 @@
     <div class="logo">
       {{ logoName }}
     </div>
-    <div class="login">
-      Log In
-    </div>
+    <b-button variant="outline-secondary" class="login" @click="showLoginDialog">Log In</b-button>
     <div class="login_icon">
       <img src="../assets/login.svg">
     </div>
@@ -21,6 +19,11 @@
       return {
         logoName: App.APP_NAME
       }
+    },
+    methods: {
+      showLoginDialog(){
+        this.$bvModal.show( 'sign-in-modal' );
+      }
     }
   }
 </script>
@@ -33,6 +36,7 @@
     line-height: 135px;
     width: 100%;
     height: 100%;
+    z-index: 1;
   }
 
   .navigator {
@@ -48,18 +52,23 @@
     line-height: 68px;
     margin: auto 0px auto 80px;
     color: white;
+    z-index: 2;
   }
 
   .login {
-    line-height: 68px;
+    border: none;
+    line-height: 36px;
     font-size: 24px;
+    font-weight: bold;
     margin: auto 0px auto auto;
     color: white;
+    z-index: 2;
   }
 
   .login_icon {
     display: flex;
     height: 70px;
     margin: auto 40px;
+    z-index: 2;
   }
 </style>

@@ -9,15 +9,18 @@
       </b-col>
     </b-row>
     <sign-up-dialog />
+    <sign-in-dialog />
   </b-container>
 </template>
 
 <script>
-  import signUpDialog from '../dialogs/sign-up-dialog';
+  import signUpDialog from '../../dialogs/sign-up-dialog';
+  import SignInDialog from "../../dialogs/sign-in-dialog";
 
   export default {
     components: {
-      signUpDialog
+      signUpDialog,
+      SignInDialog
     },
     data(){
       return {

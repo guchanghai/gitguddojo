@@ -2,7 +2,7 @@
   <div class="landing-page">
     <navigator class="navigator-bar"/>
     <div class="main-action">
-      <sign-up class="sign-up"/>
+      <susi class="sign-up"/>
     </div>
     <foot class="foot-bar"/>
   </div>
@@ -11,13 +11,13 @@
 <script>
   import foot from '../components/foot';
   import navigator from '../components/navigator';
-  import signUp from '../components/sign-up';
+  import susi from '../components/susi/sign-up-sign-in';
 
   export default {
     components: {
       foot,
       navigator,
-      signUp
+      susi
     }
   }
 </script>

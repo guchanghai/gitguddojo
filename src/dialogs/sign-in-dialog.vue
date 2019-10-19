@@ -1,6 +1,6 @@
 <template>
   <!-- Sign Up Modal dialog -->
-  <b-modal id="sign-up-modal" ref="susi-modal" @show="initOptions" centered hide-footer>
+  <b-modal id="sign-in-modal" @show="initOptions" centered hide-footer>
     <div class="sign-up-content">
       <b-row class="sign-up-item log-name">
         <b-button variant="danger" class="log-name-button sign-button">{{this.logoName}}!</b-button>
@@ -10,10 +10,12 @@
       </b-row>
       <div>
         <b-row class="sign-up-item terms">
-          <b-col>By clicking Sign Up, you agreed to our Terms of use.</b-col>
+          <b-col>By clicking Sign in, you agreed to our Terms of use.</b-col>
         </b-row>
-        <sign-up-options @signUpOptions="onSignUpOptions" v-if="!signUpOption"/>
-        <sign-up-with-email v-else-if="signUpOption === 'signUpWithEmail'"/>
+        <sign-in-with-email />
+        <b-row class="sign-up-item create-account">
+          <b-col>Don’t have an account? <span class="sign-up-link" @click="onSignUpClicked">Sign Up</span></b-col>
+        </b-row>
       </div>
     </div>
   </b-modal>
@@ -21,13 +23,11 @@
 
 <script>
   import { App } from '../constant/app-constants';
-  import signUpOptions from '../components/susi/sign-up-options';
-  import signUpWithEmail from '../components/susi/sign-up-with-email';
+  import signInWithEmail from '../components/susi/sign-in-with-email';
 
   export default {
     components: {
-      signUpOptions,
-      signUpWithEmail
+      signInWithEmail
     },
     data(){
       return {
@@ -41,6 +41,10 @@
       },
       onSignUpOptions( option ){
         this.signUpOption = option;
+      },
+      onSignUpClicked(){
+        this.$bvModal.hide( 'sign-in-modal' );
+        this.$bvModal.show( 'sign-up-modal' );
       }
     }
   }
@@ -65,5 +69,15 @@
   .terms {
     width: 80%;
     font-size: 12px;
+  }
+
+  .create-account {
+    width: 80%;
+    font-size: 16px;
+  }
+
+  .sign-up-link {
+    text-decoration: underline;
+    cursor: pointer;
   }
 </style>
