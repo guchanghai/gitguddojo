@@ -22,7 +22,8 @@ APIs that backend service provides to frontend.
 |:----    |:---|:----- |-----   |
 |user_name |Y  |string | User name   |
 |password |Y  |string | password    |
-|name     |N  |string | nick name    |
+|email     |Y  |string | User eamil   |
+|stream_id     |Y  |string | stream ID    |
 
  **Request Sample**
 
@@ -30,7 +31,8 @@ APIs that backend service provides to frontend.
   {
     "user_name": "eirc+user+name",
     "password": "xxxxxxxxxx",
-    "name": "Eric
+    "email": "xx@yy.com",
+    "stream_id": "xb"
   }
 ```
 
@@ -115,6 +117,116 @@ APIs that backend service provides to frontend.
  **Comments** 
 
 - This API doesn't support Google/Facebook/AppID login
+
+</details>
+
+<!-- -------------------------------- User logout -------------------------------- -->
+
+<details>
+
+<summary>User logout</summary>
+
+**Description：** 
+
+- User logout
+
+**Request URL：** 
+- ` http://www.gitguddojo.com/api/user/logout `
+  
+**Request Method：**
+- POST 
+
+**Request：** 
+
+|Parameter|Required|Type|Comment|
+|:----    |:---|:----- |-----   |
+|user_name |Y  |string | User name   |
+|token |string   |user access token  |
+
+ **Request Sample**
+
+``` 
+  {
+    "user_name": "eirc+user+name",
+    "token": "user_token_in_base64_encoding"
+  }
+```
+
+**Response** 
+
+|Parameter|Type|Comment|
+|:-----  |:-----|----- |
+
+ **Response Sample**
+
+``` 
+  {
+    "error_code": 0
+  }
+```
+
+ **Comments** 
+
+- This is to invalide the login token
+
+</details>
+
+<!-- -------------------------------- User profile -------------------------------- -->
+
+<details>
+
+<summary>User profile</summary>
+
+**Description：** 
+
+- Get detail info of one specific user
+
+**Request URL：** 
+- ` http://www.gitguddojo.com/api/user/profile `
+  
+**Request Method：**
+- GET 
+
+**Request：** 
+
+|Parameter|Required|Type|Comment|
+|:----    |:---|:----- |-----   |
+|user_name |Y  |string | User name   |
+|token |Y  |string | User access token    |
+
+ **Request Sample**
+
+``` 
+  {
+    "user_name": "eirc+user+name",
+    "token": "user_token_in_base64_encoding"
+  }
+```
+
+**Response** 
+
+|Parameter|Type|Comment|
+|:-----  |:-----|----- |
+|user_name |int   |user name  |
+|game_level |string   |user game level  |
+|game_role |string   |last game role|
+
+ **Response Sample**
+
+```
+  {
+    "error_code": 0,
+    "data": {
+      "user_name": "eric",
+      "game_level": "14",
+      "game_role": "0"
+    }
+  }
+```
+
+ **Comments** 
+
+- Currently just for current user. But we can expant to all the users
 
 </details>
 
