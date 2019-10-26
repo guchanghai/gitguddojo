@@ -1,5 +1,5 @@
 <template>
-  <div class="landing-page">
+  <div class="main-page">
     <navigator class="navigator-bar"/>
     <div class="main-action">
       <susi class="sign-up"/>
