@@ -19,7 +19,8 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 const routes = [
   { path: '/', component: Landing },
   { path: '/landing', component: Landing },
-  { path: '/main', component: Main }
+  { path: '/main', component: Main },
+  { path: '*', redirect: '/' }
 ];
 
 const router = new VueRouter({

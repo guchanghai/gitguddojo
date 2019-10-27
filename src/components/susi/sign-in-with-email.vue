@@ -21,7 +21,7 @@
         ></b-form-input>
       </b-form-group>
 
-      <b-button calss="action-button" type="Sign Up" variant="primary">Log In</b-button>
+      <b-button calss="action-button" type="Sign Up" variant="primary" >Log In</b-button>
     </b-form>
   </div>
 </template>
@@ -41,6 +41,7 @@
     },
     methods: {
       onSubmit(evt) {
+        this.$router.replace( '/main' );
         evt.preventDefault();
       },
       onReset(evt) {
@@ -48,8 +49,6 @@
 
         // Reset our form values
         this.form.email = '';
-        this.form.userName = '';
-        this.form.steamId = '';
         this.form.password = '';
 
         // Trick to reset/clear native browser form validation state
