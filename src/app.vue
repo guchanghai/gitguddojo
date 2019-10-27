@@ -1,21 +1,14 @@
 <template>
-  <div id="app">
-    <!-- landing/ -->
-    <app-main/>
+  <div id="app-main">
+    <router-view class="view"></router-view>
   </div>
 </template>
 
 <script>
   import { App } from './constant/app-constants';
-  import landing from './pages/landing.vue'
-  import appMain from './pages/app-main.vue'
 
   export default {
-    name: App.APP_NAME,
-    components: {
-      landing,
-      appMain
-    }
+    name: App.APP_NAME
   }
 </script>
 
@@ -24,7 +17,7 @@
     margin: 0px;
   }
 
-  #app {
+  #app-main {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
