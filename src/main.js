@@ -6,6 +6,8 @@ import BootstrapVue from 'bootstrap-vue';
 
 import Main from './pages/main.vue';
 import Landing from './pages/landing.vue';
+import Friend from './components/main/friend.vue';
+import Welcome from './components/main/welcome.vue';
 
 Vue.config.productionTip = false;
 
@@ -19,7 +21,13 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 const routes = [
   { path: '/', component: Landing },
   { path: '/landing', component: Landing },
-  { path: '/main', component: Main },
+  { path: '/main', component: Main,
+    children: [
+      // Friend card
+      { path: 'friend', component: Friend },
+      { path: '', component: Welcome },
+    ]
+  },
   { path: '*', redirect: '/' }
 ];
 
@@ -30,6 +38,6 @@ const router = new VueRouter({
 
 // render function to mount the whole application
 new Vue({
-  render: h => h( App ),
+  render: createElement => createElement( App ),
   router
 }).$mount('#app-render-point');

@@ -14,13 +14,13 @@
             </b-row>
             <b-row align-v="start">
               <b-col>
-                <b-list-group>  
+                <b-list-group>
                   <b-list-group-item>Region</b-list-group-item>
                   <b-list-group-item>Ranked</b-list-group-item>
                   <b-list-group-item>Style</b-list-group-item>
                   <b-list-group-item>Platform</b-list-group-item>
                 </b-list-group>
-              </b-col>  
+              </b-col>
             </b-row>
           </b-container>
         </b-row>
@@ -33,11 +33,11 @@
             </b-row>
             <b-row align-v="start">
               <b-col>
-                <b-list-group>  
+                <b-list-group>
                   <b-list-group-item>Support</b-list-group-item>
                   <b-list-group-item>Logout</b-list-group-item>
                 </b-list-group>
-              </b-col>  
+              </b-col>
             </b-row>
           </b-container>
         </b-row>
@@ -50,14 +50,16 @@
         </div>
       </div>
       <div class="main-action-area">
-          <b-button class="main-action-button" variant="outline-primary">Look for group!</b-button>
+          <router-view class="view"></router-view>
       </div>
-    </div> 
+    </div>
   </div>
 </template>
 
 <script>
   export default {
+    methods: {
+    }
   }
 </script>
 
@@ -111,15 +113,5 @@
 
   .main-action-area {
     padding-top: 350px;
-  }
-
-  .main-action-button {
-    height: 60px;
-    width: 30%;
-    border-radius: 25px;
-    font-size: 28px;
-    background-color: white;
-    color: black;
-    font-weight: bold;
   }
 </style>
