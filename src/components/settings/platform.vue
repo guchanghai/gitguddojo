@@ -12,12 +12,12 @@
             </b-col>
         </b-row>
         <b-row class="profile-info-row" v-for="form in forms" :key="form.id">
-              <b-col class="row-label" sm="3">
+              <b-col class="row-label" sm="4">
                   <label :for="`${form.id}`">
                       {{ form.name }}
                   </label>
               </b-col>
-              <b-col sm="6">
+              <b-col sm="5">
                 <b-form-input :class="`${form.class}`" :id="`${form.id}`" :type="`${form.type}`"></b-form-input>
               </b-col>
               <b-col sm="3" v-if="form.action">
@@ -26,9 +26,9 @@
             </b-col>
         </b-row>
         <b-row>
-            <b-col class="row-label" sm="3">
+            <b-col class="row-label" sm="4">
             </b-col>
-            <b-col class="submit-col" sm="9">
+            <b-col class="submit-col" sm="8">
                 <b-button class="submit-btn" type="submit" variant="primary">Submit</b-button>
             </b-col>
         </b-row>
