@@ -8,6 +8,7 @@ import Main from './pages/main.vue';
 import Landing from './pages/landing.vue';
 import Friend from './components/main/friend.vue';
 import Welcome from './components/main/welcome.vue';
+import Profile from './components/settings/profile.vue';
 
 Vue.config.productionTip = false;
 
@@ -25,6 +26,7 @@ const routes = [
     children: [
       // Friend card
       { path: 'friend', component: Friend },
+      { path: 'profile', component: Profile },
       { path: '', component: Welcome },
     ]
   },
