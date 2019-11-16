@@ -12,12 +12,21 @@
             </b-row>
             <b-row align-v="start">
               <b-col>
-                <b-list-group>
-                  <b-list-group-item>Region</b-list-group-item>
-                  <b-list-group-item>Ranked</b-list-group-item>
-                  <b-list-group-item>Style</b-list-group-item>
-                  <b-list-group-item>Platform</b-list-group-item>
-                </b-list-group>
+                <div v-if="this.mode === 'profile'">
+                  <b-list-group>
+                    <b-list-group-item>Edit Profile</b-list-group-item>
+                    <b-list-group-item>Change Password</b-list-group-item>
+                    <b-list-group-item>Edit Platform ID</b-list-group-item>
+                  </b-list-group>
+                </div>
+                <div v-else>
+                  <b-list-group>
+                    <b-list-group-item>Region</b-list-group-item>
+                    <b-list-group-item>Ranked</b-list-group-item>
+                    <b-list-group-item>Style</b-list-group-item>
+                    <b-list-group-item>Platform</b-list-group-item>
+                  </b-list-group>
+                </div>
               </b-col>
             </b-row>
           </b-container>
@@ -54,8 +63,14 @@
 
 <script>
 export default {
+  data() {
+    return {
+      mode: ""
+    };
+  },
   methods: {
     showProfile() {
+      this.mode = 'profile';
       this.$router.replace("/main/profile");
       evt.preventDefault();
     }
