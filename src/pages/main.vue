@@ -7,28 +7,35 @@
         </b-row>
         <b-row class="side-bar-middle">
           <b-container fluid>
-            <b-row align-v="start">
-              <b-col class="bar-middle-header">LFG Settings</b-col>
-            </b-row>
-            <b-row align-v="start">
-              <b-col>
-                <div v-if="this.mode === 'profile'">
+            <div v-if="this.mode === 'profile'">
+              <b-row align-v="start">
+                <b-col class="bar-middle-header">Profile</b-col>
+              </b-row>
+              <b-row align-v="start">
+                <b-col>
                   <b-list-group>
                     <b-list-group-item>Edit Profile</b-list-group-item>
                     <b-list-group-item>Change Password</b-list-group-item>
                     <b-list-group-item>Edit Platform ID</b-list-group-item>
                   </b-list-group>
-                </div>
-                <div v-else>
+                </b-col>
+              </b-row>
+            </div>
+            <div v-else>
+              <b-row align-v="start">
+                <b-col class="bar-middle-header">LFG Settings</b-col>
+              </b-row>
+              <b-row align-v="start">
+                <b-col>
                   <b-list-group>
                     <b-list-group-item>Region</b-list-group-item>
                     <b-list-group-item>Ranked</b-list-group-item>
                     <b-list-group-item>Style</b-list-group-item>
                     <b-list-group-item>Platform</b-list-group-item>
                   </b-list-group>
-                </div>
-              </b-col>
-            </b-row>
+                </b-col>
+              </b-row>
+            </div>
           </b-container>
         </b-row>
         <b-row class="side-bar-footer">
@@ -70,7 +77,7 @@ export default {
   },
   methods: {
     showProfile() {
-      this.mode = 'profile';
+      this.mode = "profile";
       this.$router.replace("/main/profile");
       evt.preventDefault();
     }
