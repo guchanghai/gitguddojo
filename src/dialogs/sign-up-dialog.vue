@@ -79,6 +79,6 @@ export default {
 
 .sign-in-link {
   font-size: 16px;
-  margin-bottom: 20px;
+  margin: 20px 0px;
 }
 </style>
