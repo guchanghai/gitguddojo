@@ -14,8 +14,8 @@
               <b-row align-v="start">
                 <b-col>
                   <b-list-group>
-                    <b-list-group-item>Edit Profile</b-list-group-item>
-                    <b-list-group-item>Change Password</b-list-group-item>
+                    <b-list-group-item @click="showProfile">Edit Profile</b-list-group-item>
+                    <b-list-group-item @click="changePassword">Change Password</b-list-group-item>
                     <b-list-group-item>Edit Platform ID</b-list-group-item>
                   </b-list-group>
                 </b-col>
@@ -47,7 +47,7 @@
               <b-col>
                 <b-list-group>
                   <b-list-group-item>Support</b-list-group-item>
-                  <b-list-group-item>Logout</b-list-group-item>
+                  <b-list-group-item @click="signOut">Logout</b-list-group-item>
                 </b-list-group>
               </b-col>
             </b-row>
@@ -79,6 +79,14 @@ export default {
     showProfile() {
       this.mode = "profile";
       this.$router.replace("/main/profile");
+      evt.preventDefault();
+    },
+    changePassword() {
+      this.$router.replace("/main/password");
+      evt.preventDefault();
+    },
+    signOut() {
+      this.$router.replace("/");
       evt.preventDefault();
     }
   }
@@ -138,6 +146,10 @@ export default {
 }
 
 .show-profile {
+  cursor: pointer;
+}
+
+.list-group-item {
   cursor: pointer;
 }
 </style>

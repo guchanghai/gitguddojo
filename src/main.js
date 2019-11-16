@@ -9,6 +9,7 @@ import Landing from './pages/landing.vue';
 import Friend from './components/main/friend.vue';
 import Welcome from './components/main/welcome.vue';
 import Profile from './components/settings/profile.vue';
+import Password from './components/settings/password.vue';
 
 Vue.config.productionTip = false;
 
@@ -27,6 +28,7 @@ const routes = [
       // Friend card
       { path: 'friend', component: Friend },
       { path: 'profile', component: Profile },
+      { path: 'password', component: Password },
       { path: '', component: Welcome },
     ]
   },

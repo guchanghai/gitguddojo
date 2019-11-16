@@ -27,7 +27,7 @@
             </div>
           </b-col>
           <b-col class="detail-action">
-            <b-button class="action-button invite">Invite to Git gud</b-button>
+            <b-button class="action-button invite">Select</b-button>
             <b-button class="action-button decline">Decline</b-button>
           </b-col>
         </b-row>
