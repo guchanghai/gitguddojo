@@ -10,6 +10,7 @@ import Friend from './components/main/friend.vue';
 import Welcome from './components/main/welcome.vue';
 import Profile from './components/settings/profile.vue';
 import Password from './components/settings/password.vue';
+import Platform from './components/settings/platform.vue';
 
 Vue.config.productionTip = false;
 
@@ -29,6 +30,7 @@ const routes = [
       { path: 'friend', component: Friend },
       { path: 'profile', component: Profile },
       { path: 'password', component: Password },
+      { path: 'platform', component: Platform },
       { path: '', component: Welcome },
     ]
   },

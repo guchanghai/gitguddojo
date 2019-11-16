@@ -16,7 +16,7 @@
                   <b-list-group>
                     <b-list-group-item @click="showProfile">Edit Profile</b-list-group-item>
                     <b-list-group-item @click="changePassword">Change Password</b-list-group-item>
-                    <b-list-group-item>Edit Platform ID</b-list-group-item>
+                    <b-list-group-item @click="editPlatform">Edit Platform ID</b-list-group-item>
                   </b-list-group>
                 </b-col>
               </b-row>
@@ -76,13 +76,17 @@ export default {
     };
   },
   methods: {
-    showProfile() {
+    showProfile( evt ) {
       this.mode = "profile";
       this.$router.replace("/main/profile");
       evt.preventDefault();
     },
-    changePassword() {
+    changePassword( evt ) {
       this.$router.replace("/main/password");
+      evt.preventDefault();
+    },
+    editPlatform( evt ) {
+      this.$router.replace("/main/platform");
       evt.preventDefault();
     },
     signOut() {
