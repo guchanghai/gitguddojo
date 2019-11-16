@@ -2,10 +2,10 @@
   <div class="profile">
     <b-container fluid>
         <b-row class="profile-header">
-            <b-col class="row-label profile-header-icon" sm="3">
+            <b-col class="row-label profile-header-icon" sm="4">
                 <img class="profile-header-img" src="../../assets/profile-header.svg"/>
             </b-col>
-            <b-col sm="9">
+            <b-col sm="5">
                 <div class="profile-header-info" >
                     <b-row>Mr_Ashen_One</b-row>
                 </div>
@@ -80,7 +80,7 @@ export default {
 }
 
 .profile-header-info {
-  margin: auto 25px auto 25px;
+  margin: 15px 25px 0 25px;
 }
 
 .profile-info-row {
