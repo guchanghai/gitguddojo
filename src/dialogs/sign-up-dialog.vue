@@ -14,10 +14,10 @@
         </b-row>
         <sign-up-options @signUpOptions="onSignUpOptions" v-if="!signUpOption" />
         <sign-up-with-email v-else-if="signUpOption === 'signUpWithEmail'" />
-        <b-row class="sign-up-item terms">
-          <b-col @click="singin">
-            Has account?
-            <a @click="singin" href="">Sign In</a>
+        <b-row class="sign-in-link">
+          <b-col>
+            Has account already?
+            <b-link @click="singin" href>Sign In</b-link>
           </b-col>
         </b-row>
       </div>
@@ -49,8 +49,8 @@ export default {
       this.signUpOption = option;
     },
     singin() {
-        this.$bvModal.hide( 'sign-up-modal' );
-        this.$bvModal.show( 'sign-in-modal' );
+      this.$bvModal.hide("sign-up-modal");
+      this.$bvModal.show("sign-in-modal");
     }
   }
 };
@@ -75,5 +75,10 @@ export default {
 .terms {
   width: 80%;
   font-size: 12px;
+}
+
+.sign-in-link {
+  font-size: 16px;
+  margin-bottom: 20px;
 }
 </style>
