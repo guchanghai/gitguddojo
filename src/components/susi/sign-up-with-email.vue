@@ -60,6 +60,7 @@
     },
     methods: {
       onSubmit(evt) {
+        this.$router.replace( '/main' );
         evt.preventDefault();
       },
       onReset(evt) {
