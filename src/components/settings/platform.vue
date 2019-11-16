@@ -1,4 +1,4 @@
-<<template>
+<template>
   <div class="profile">
     <b-container fluid>
         <b-row class="profile-header">

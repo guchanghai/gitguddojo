@@ -1,4 +1,4 @@
-<<template>
+<template>
   <div class="password">
     <b-container fluid>
         <b-row class="profile-header">
@@ -58,7 +58,7 @@ export default {
           type: "password"
         },
         {
-          id: "newPassword",
+          id: "confirmNewPassword",
           name: "Confirm New Password",
           type: "password"
         }
