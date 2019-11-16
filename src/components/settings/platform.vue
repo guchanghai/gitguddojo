@@ -1,37 +1,33 @@
 <template>
   <div class="profile">
     <b-container fluid>
-        <b-row class="profile-header">
-            <b-col class="row-label profile-header-icon" sm="4">
-                <img class="profile-header-img" src="../../assets/profile-header.svg"/>
-            </b-col>
-            <b-col sm="5">
-                <div class="profile-header-info" >
-                    <b-row>Mr_Ashen_One</b-row>
-                </div>
-            </b-col>
-        </b-row>
-        <b-row class="profile-info-row" v-for="form in forms" :key="form.id">
-              <b-col class="row-label" sm="4">
-                  <label :for="`${form.id}`">
-                      {{ form.name }}
-                  </label>
-              </b-col>
-              <b-col sm="5">
-                <b-form-input :class="`${form.class}`" :id="`${form.id}`" :type="`${form.type}`"></b-form-input>
-              </b-col>
-              <b-col sm="3" v-if="form.action">
-                <b-button class="verify-btn" type="submit" variant="primary">Verify</b-button>
-              </b-col>
-            </b-col>
-        </b-row>
-        <b-row>
-            <b-col class="row-label" sm="4">
-            </b-col>
-            <b-col class="submit-col" sm="8">
-                <b-button class="submit-btn" type="submit" variant="primary">Submit</b-button>
-            </b-col>
-        </b-row>
+      <b-row class="profile-header">
+        <b-col class="row-label profile-header-icon" sm="4">
+          <img class="profile-header-img" src="../../assets/profile-header.svg" />
+        </b-col>
+        <b-col sm="5">
+          <div class="profile-header-info">
+            <b-row>Mr_Ashen_One</b-row>
+          </div>
+        </b-col>
+      </b-row>
+      <b-row class="profile-info-row" v-for="form in forms" :key="form.id">
+        <b-col class="row-label" sm="4">
+          <label :for="`${form.id}`">{{ form.name }}</label>
+        </b-col>
+        <b-col sm="5">
+          <b-form-input :class="`${form.class}`" :id="`${form.id}`" :type="`${form.type}`"></b-form-input>
+        </b-col>
+        <b-col sm="3" v-if="form.action">
+          <b-button class="verify-btn" type="submit" variant="primary">Verify</b-button>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col class="row-label" sm="4"></b-col>
+        <b-col class="submit-col" sm="8">
+          <b-button class="submit-btn" type="submit" variant="primary">Submit</b-button>
+        </b-col>
+      </b-row>
     </b-container>
   </div>
 </template>
@@ -44,7 +40,7 @@ export default {
         {
           id: "streamID",
           name: "Current Steam ID",
-          type: "text",
+          type: "text"
         },
         {
           id: "changeId",

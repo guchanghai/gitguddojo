@@ -14,40 +14,39 @@
 </template>
 
 <script>
-  import signUpDialog from '../../dialogs/sign-up-dialog';
-  import SignInDialog from "../../dialogs/sign-in-dialog";
+import signUpDialog from "../../dialogs/sign-up-dialog";
+import SignInDialog from "../../dialogs/sign-in-dialog";
 
-  export default {
-    components: {
-      signUpDialog,
-      SignInDialog
-    },
-    data(){
-      return {
-      }
-    }
+export default {
+  components: {
+    signUpDialog,
+    SignInDialog
+  },
+  data() {
+    return {};
   }
+};
 </script>
 
 <style scoped>
-  .sign-up {
-    color: white;
-    font-weight: bold;
-  }
+.sign-up {
+  color: white;
+  font-weight: bold;
+}
 
-  .title {
-    font-size: 48px;
-  }
+.title {
+  font-size: 48px;
+}
 
-  .sign-up-button {
-    width: 15%;
-    margin-top: 20px;
-    font-size: 24px;
-    color: white;
-    font-weight: bold;
-    border-radius: 17px;
-    border-width: 2px;
-    border-color: white;
-    background-color: inherit;
-  }
+.sign-up-button {
+  width: 15%;
+  margin-top: 20px;
+  font-size: 24px;
+  color: white;
+  font-weight: bold;
+  border-radius: 17px;
+  border-width: 2px;
+  border-color: white;
+  background-color: inherit;
+}
 </style>
