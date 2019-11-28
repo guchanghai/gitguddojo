@@ -1,43 +1,39 @@
 <template>
   <div class="password">
     <b-container fluid>
-        <b-row class="profile-header">
-            <b-col class="row-label profile-header-icon" sm="5">
-                <img class="profile-header-img" src="../../assets/profile-header.svg"/>
-            </b-col>
-            <b-col sm="7">
-                <div class="profile-header-info" >
-                    <b-row>Mr_Ashen_One</b-row>
-                    <b-row>(Steam ID: mxguy)</b-row>
-                </div>
-            </b-col>
-        </b-row>
-        <b-row class="profile-info-row" v-for="form in forms" :key="form.id">
-            <b-col class="row-label" sm="5">
-                <label :for="`${form.id}`">
-                    {{ form.name }}
-                </label>
-            </b-col>
-            <b-col sm="7">
-                <div>
-                    <b-form-input :class="`${form.class}`" :id="`${form.id}`" :type="`${form.type}`"></b-form-input>
-                </div>
-            </b-col>
-        </b-row>
-        <b-row>
-            <b-col class="row-label" sm="5">
-            </b-col>
-            <b-col class="submit-col" sm="7">
-                <b-button class="submit-btn" type="submit" variant="primary">Change Password</b-button>
-            </b-col>
-        </b-row>
-        <b-row class="forgot-password">
-            <b-col class="row-label" sm="5">
-            </b-col>
-            <b-col class="submit-col" sm="7">
-                <a class="forgot-password-col" href="">Forgot Password?</a>
-            </b-col>
-        </b-row>
+      <b-row class="profile-header">
+        <b-col class="row-label profile-header-icon" sm="5">
+          <img class="profile-header-img" src="../../assets/profile-header.svg" />
+        </b-col>
+        <b-col sm="7">
+          <div class="profile-header-info">
+            <b-row>Mr_Ashen_One</b-row>
+            <b-row>(Steam ID: mxguy)</b-row>
+          </div>
+        </b-col>
+      </b-row>
+      <b-row class="profile-info-row" v-for="form in forms" :key="form.id">
+        <b-col class="row-label" sm="5">
+          <label :for="`${form.id}`">{{ form.name }}</label>
+        </b-col>
+        <b-col sm="7">
+          <div>
+            <b-form-input :class="`${form.class}`" :id="`${form.id}`" :type="`${form.type}`"></b-form-input>
+          </div>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col class="row-label" sm="5"></b-col>
+        <b-col class="submit-col" sm="7">
+          <b-button class="submit-btn" type="submit" variant="primary">Change Password</b-button>
+        </b-col>
+      </b-row>
+      <b-row class="forgot-password">
+        <b-col class="row-label" sm="5"></b-col>
+        <b-col class="submit-col" sm="7">
+          <a class="forgot-password-col" href>Forgot Password?</a>
+        </b-col>
+      </b-row>
     </b-container>
   </div>
 </template>
@@ -116,6 +112,6 @@ export default {
 }
 
 .forgot-password {
-    margin: 20px 0px 0px 0px;
+  margin: 20px 0px 0px 0px;
 }
 </style>
