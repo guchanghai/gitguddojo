@@ -4,6 +4,9 @@ var Strategy = require('passport-local').Strategy;
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
 var db = require('./db');
 
+// Connect to db
+db.mysql.connect();
+
 // Configure the local strategy for use by Passport.
 //
 // The local strategy require a `verify` function which receives the credentials
