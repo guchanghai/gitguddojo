@@ -1,6 +1,7 @@
 var express = require('express');
 var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
+var GoogleStrategy = require('passport-google-oauth20').Strategy;
 var db = require('./db');
 
 // Configure the local strategy for use by Passport.
@@ -24,6 +25,21 @@ passport.use(new Strategy(
       return cb(null, user);
     });
   }));
+
+const GOOGLE_CLIENT_ID = '446756071190-9itae7ae3rn3ng0859577kq7glm46gj8.apps.googleusercontent.com';
+const GOOGLE_CLIENT_SECRET = 'p0y9u6Qufh8j-FBffpq56iY1';
+
+passport.use(new GoogleStrategy({
+    clientID: GOOGLE_CLIENT_ID,
+    clientSecret: GOOGLE_CLIENT_SECRET,
+    callbackURL: "/auth/google/callback"
+  },
+  function (accessToken, refreshToken, profile, cb) {
+    db.users.findOrCreate(profile, function (err, user) {
+      return cb(err, user);
+    });
+  }
+));
 
 // Configure Passport authenticated session persistence.
 //
@@ -49,7 +65,10 @@ const URL = {
   DEFAULT: '/',
   LOGIN: '/login',
   LOGOUT: '/logout',
+  GOOGLE_AUTH: '/auth/google',
+  GOOGLE_AUTH_CALLBACK: '/auth/google/callback',
   SESSION_TIMEOUT: '/sessionTimeout',
+  MAIN: '/main',
   PROFILE: '/profile'
 };
 
@@ -97,10 +116,18 @@ app.post(URL.LOGIN,
     });
   });
 
+app.get(URL.MAIN,
+  require('connect-ensure-login').ensureLoggedIn(URL.SESSION_TIMEOUT),
+  function (req, res) {
+    res.send({
+      msg: 'Welcome!'
+    });
+  });
+
 app.get(URL.LOGOUT,
   function (req, res) {
     req.logout();
-    res.send( 'logout successfully!' )
+    res.send('logout successfully!')
   });
 
 app.get(URL.PROFILE,
@@ -108,6 +135,23 @@ app.get(URL.PROFILE,
   function (req, res) {
     res.send({
       user: req.user
+    });
+  });
+
+app.get(URL.GOOGLE_AUTH,
+  passport.authenticate('google', {
+    scope: ['profile', 'email']
+  }));
+
+app.get(URL.GOOGLE_AUTH_CALLBACK,
+  passport.authenticate('google', {
+    failureRedirect: URL.SESSION_TIMEOUT
+  }),
+  function (req, res) {
+    // Successful authentication, redirect home.
+    res.send({
+      msg: 'Welcome!',
+      name: req.user.username
     });
   });
 
