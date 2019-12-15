@@ -28,6 +28,7 @@
 
 <script>
 import axios from "axios";
+import qs from "qs";
 
 export default {
   data() {
@@ -44,16 +45,20 @@ export default {
   methods: {
     onSubmit(evt) {
       try {
+        var self = this;
+
         // Don't do anything with the response; Do not retry if POST request fails
-        axios({
-          method: "post",
-          url: "/api/login",
-          data: {
-            firstName: "Fred",
-            lastName: "Flintstone"
-          }
-        }).then(function(response) {
+        axios
+          .post(
+            "/api/login/",
+            qs.stringify({
+              username: this.form.email,
+              password: this.form.password
+            })
+          )
+          .then(function(response) {
             console.log(response);
+            self.$router.replace("main");
           })
           .catch(function(error) {
             console.log(error);
