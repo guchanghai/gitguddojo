@@ -31,7 +31,7 @@ exports.findOrCreate = function (user, cb) {
     for (var i = 0, len = records.length; i < len; i++) {
       var record = records[i];
       if (record.id === user.id) {
-        return cb(null, record);
+        return cb(null, record, true);
       }
     }
 
@@ -39,7 +39,7 @@ exports.findOrCreate = function (user, cb) {
       id: user.id,
       username: (user.name && user.name.givenName) || user.username,
       displayName: user.displayName || user.givenName || (user.name && user.name.givenName) || user.username,
-      email: Array.isArray(user.emails) ? user.emails.slice(0) : user.email,
+      email: Array.isArray(user.emails) ? user.emails[0].value : (user.email || 'changhaigu@126.com'),
       password: user.password,
       streamId: user.streamId
     };

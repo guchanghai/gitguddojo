@@ -55,7 +55,15 @@ passport.use(new GoogleStrategy({
     callbackURL: `https://localhost${URL.GOOGLE_AUTH_CALLBACK}`
   },
   function (accessToken, refreshToken, profile, cb) {
-    db.users.findOrCreate(profile, function (err, user) {
+    db.users.findOrCreate(profile, function (err, user, exist) {
+      if (!exist) {
+        try {
+          db.mysql.addUser(user, () => {});
+        } catch (err) {
+          return cb(err, user);
+        }
+      }
+
       return cb(err, user);
     });
   }
@@ -72,7 +80,15 @@ passport.use(new FacebookStrategy({
     profileFields: ['id', 'name', 'email']
   },
   function (accessToken, refreshToken, profile, cb) {
-    db.users.findOrCreate(profile, function (err, user) {
+    db.users.findOrCreate(profile, function (err, user, exist) {
+      if (!exist) {
+        try {
+          db.mysql.addUser(user, () => {});
+        } catch (err) {
+          return cb(err, user);
+        }
+      }
+
       return cb(err, user);
     });
   }
