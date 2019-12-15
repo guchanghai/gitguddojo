@@ -16,7 +16,7 @@
       </b-form-group>
 
       <b-form-group id="input-group-steam-id" label-for="input-stream-id">
-        <b-form-input id="input-stream-id" v-model="form.steamId" required placeholder="Stream ID"></b-form-input>
+        <b-form-input id="input-stream-id" v-model="form.streamId" required placeholder="Stream ID"></b-form-input>
       </b-form-group>
 
       <b-form-group id="input-group-password" label-for="input-password">
@@ -36,6 +36,9 @@
 </template>
 
 <script>
+import axios from "axios";
+import qs from "qs";
+
 export default {
   data() {
     return {
@@ -50,7 +53,34 @@ export default {
   },
   methods: {
     onSubmit(evt) {
-      this.$router.replace("/main");
+      try {
+        var self = this;
+
+        // Don't do anything with the response; Do not retry if POST request fails
+        axios
+          .post(
+            "/api/signUp/",
+            qs.stringify({
+              username: this.form.userName,
+              email: this.form.email,
+              password: this.form.password,
+              streamId: this.form.streamId
+            })
+          )
+          .then(function(response) {
+            console.log(response);
+            self.$router.replace("main");
+          })
+          .catch(function(error) {
+            console.log(error);
+          })
+          .finally(function() {
+            // always executed
+          });
+      } catch (error) {
+        // Take no action on failure
+        this.$router.replace("");
+      }
       evt.preventDefault();
     },
     onReset(evt) {

@@ -63,7 +63,7 @@ export default {
 }
 
 .sign-up-item {
-  width: 40%;
+  width: 45%;
   margin: 25px auto;
 }
 

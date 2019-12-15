@@ -69,6 +69,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -76,21 +78,23 @@ export default {
     };
   },
   methods: {
-    showProfile( evt ) {
+    showProfile(evt) {
       this.mode = "profile";
       this.$router.replace("/main/profile");
       evt.preventDefault();
     },
-    changePassword( evt ) {
+    changePassword(evt) {
       this.$router.replace("/main/password");
       evt.preventDefault();
     },
-    editPlatform( evt ) {
+    editPlatform(evt) {
       this.$router.replace("/main/platform");
       evt.preventDefault();
     },
-    signOut( evt ) {
-      this.$router.replace("/");
+    signOut(evt) {
+      axios.get("/api/logout/").then(() => {
+        this.$router.replace("/");
+      });
       evt.preventDefault();
     }
   }

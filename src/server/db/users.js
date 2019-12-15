@@ -37,12 +37,14 @@ exports.findOrCreate = function (user, cb) {
 
     const newRecord = {
       id: user.id,
-      username: user.name.givenName,
-      displayName: user.displayName || user.givenName,
-      emails: Array.isArray(user.emails) ? user.emails.slice(0) : user.email
+      username: (user.name && user.name.givenName) || user.username,
+      displayName: user.displayName || user.givenName || (user.name && user.name.givenName) || user.username,
+      email: Array.isArray(user.emails) ? user.emails.slice(0) : user.email,
+      password: user.password,
+      streamId: user.streamId
     };
 
-    records.push(newRecord)
+    records.push(newRecord);
     return cb(null, newRecord);
   });
 }

@@ -5,6 +5,7 @@ var GoogleStrategy = require('passport-google-oauth20').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 var db = require('./db');
 var cors = require('cors');
+var Guid = require('guid');
 
 const URL = {
   DEFAULT: '/api',
@@ -15,6 +16,7 @@ const URL = {
   FACEBOOK_AUTH: '/api/auth/facebook',
   FACEBOOK_AUTH_CALLBACK: '/api/auth/facebook/callback',
   SESSION_TIMEOUT: '/api/sessionTimeout',
+  SIGN_UP: '/api/signUp',
   MAIN: '/api/main',
   PROFILE: '/api/profile'
 };
@@ -140,6 +142,25 @@ app.post(URL.LOGIN,
   function (req, res) {
     res.send({
       msg: 'login successfully!'
+    });
+  });
+
+app.post(URL.SIGN_UP,
+  function (req, res) {
+    const profile = {
+      id: Guid.raw(),
+      username: req.body.username,
+      email: req.body.email,
+      password: req.body.password,
+      streamId: req.body.streamId
+    };
+
+    db.users.findOrCreate(profile, function (err, user) {
+      db.mysql.addUser(user, () => {
+        res.send({
+          user
+        });
+      });
     });
   });
 

@@ -20,3 +20,21 @@ exports.connect = function () {
     users.records.push.apply(users.records, results);
   });
 }
+
+exports.addUser = function (user, cb) {
+  connection.query('INSERT INTO users SET ?', user, function (error, results) {
+    if (error) throw error;
+
+    // get all the user info
+    connection.query('SELECT * from users', function (error, results) {
+      if (error) throw error;
+      users.records.length = 0;
+      users.records.push.apply(users.records, results);
+    });
+
+    // Neat!
+    cb(null, results);
+  });
+
+  // console.log(query.sql);
+}
