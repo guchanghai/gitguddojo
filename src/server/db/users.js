@@ -38,8 +38,8 @@ exports.findOrCreate = function (user, cb) {
     const newRecord = {
       id: user.id,
       username: user.name.givenName,
-      displayName: user.displayName,
-      emails: user.emails.slice(0)
+      displayName: user.displayName || user.givenName,
+      emails: Array.isArray(user.emails) ? user.emails.slice(0) : user.email
     };
 
     records.push(newRecord)

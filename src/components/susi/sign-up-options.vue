@@ -4,7 +4,7 @@
       <b-button variant="danger" class="log-name-button sign-button" @click="onSignUpWithEmail">Sign Up with Email</b-button>
     </b-row>
     <b-row class="sign-up-item with-facebook">
-      <b-button variant="primary" class="log-name-button sign-button ">Sign Up with Facebook</b-button>
+      <b-button variant="primary" class="log-name-button sign-button" @click="onSignUpWithFacebook">Sign Up with Facebook</b-button>
     </b-row>
     <b-row class="sign-up-item with-google">
       <b-button variant="primary" class="log-name-button sign-button" @click="onSignUpWithGoogle">Sign Up with Google</b-button>
@@ -24,6 +24,9 @@
       },
       onSignUpWithGoogle(){
         window.location = 'https://localhost/api/auth/google/';
+      },
+      onSignUpWithFacebook(){
+        window.location = 'https://localhost/api/auth/facebook/';
       }
     }
   }

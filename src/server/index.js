@@ -2,8 +2,22 @@ var express = require('express');
 var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
+var FacebookStrategy = require('passport-facebook').Strategy;
 var db = require('./db');
 var cors = require('cors');
+
+const URL = {
+  DEFAULT: '/api',
+  LOGIN: '/api/login',
+  LOGOUT: '/api/logout',
+  GOOGLE_AUTH: '/api/auth/google',
+  GOOGLE_AUTH_CALLBACK: '/api/auth/google/callback',
+  FACEBOOK_AUTH: '/api/auth/facebook',
+  FACEBOOK_AUTH_CALLBACK: '/api/auth/facebook/callback',
+  SESSION_TIMEOUT: '/api/sessionTimeout',
+  MAIN: '/api/main',
+  PROFILE: '/api/profile'
+};
 
 // Connect to db
 db.mysql.connect();
@@ -36,7 +50,24 @@ const GOOGLE_CLIENT_SECRET = 'p0y9u6Qufh8j-FBffpq56iY1';
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "https://localhost/api/auth/google/callback"
+    callbackURL: `https://localhost${URL.GOOGLE_AUTH_CALLBACK}`
+  },
+  function (accessToken, refreshToken, profile, cb) {
+    db.users.findOrCreate(profile, function (err, user) {
+      return cb(err, user);
+    });
+  }
+));
+
+// Facebook Auth Sign In
+const FACEBOOK_CLIENT_ID = '460351481337631';
+const FACEBOOK_CLIENT_SECRET = 'a1322f6c68ea384ebccf2f2126220991';
+
+passport.use(new FacebookStrategy({
+    clientID: FACEBOOK_CLIENT_ID,
+    clientSecret: FACEBOOK_CLIENT_SECRET,
+    callbackURL: `https://localhost${URL.FACEBOOK_AUTH_CALLBACK}`,
+    profileFields: ['id', 'name', 'email']
   },
   function (accessToken, refreshToken, profile, cb) {
     db.users.findOrCreate(profile, function (err, user) {
@@ -64,17 +95,6 @@ passport.deserializeUser(function (id, cb) {
     cb(null, user);
   });
 });
-
-const URL = {
-  DEFAULT: '/api',
-  LOGIN: '/api/login',
-  LOGOUT: '/api/logout',
-  GOOGLE_AUTH: '/api/auth/google',
-  GOOGLE_AUTH_CALLBACK: '/api/auth/google/callback',
-  SESSION_TIMEOUT: '/api/sessionTimeout',
-  MAIN: '/api/main',
-  PROFILE: '/api/profile'
-};
 
 // Create a new Express application.
 var app = express();
@@ -145,6 +165,7 @@ app.get(URL.PROFILE,
     });
   });
 
+// Google Auth Sign In
 app.get(URL.GOOGLE_AUTH,
   passport.authenticate('google', {
     scope: ['profile', 'email']
@@ -152,6 +173,19 @@ app.get(URL.GOOGLE_AUTH,
 
 app.get(URL.GOOGLE_AUTH_CALLBACK,
   passport.authenticate('google', {
+    failureRedirect: URL.SESSION_TIMEOUT
+  }),
+  function (req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/main');
+  });
+
+// Facebook Auth Sign In
+app.get(URL.FACEBOOK_AUTH,
+  passport.authenticate('facebook'));
+
+app.get(URL.FACEBOOK_AUTH_CALLBACK,
+  passport.authenticate('facebook', {
     failureRedirect: URL.SESSION_TIMEOUT
   }),
   function (req, res) {
