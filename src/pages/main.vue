@@ -89,7 +89,7 @@ export default {
       this.$router.replace("/main/platform");
       evt.preventDefault();
     },
-    signOut() {
+    signOut( evt ) {
       this.$router.replace("/");
       evt.preventDefault();
     }

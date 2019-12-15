@@ -7,7 +7,7 @@
       <b-button variant="primary" class="log-name-button sign-button ">Sign Up with Facebook</b-button>
     </b-row>
     <b-row class="sign-up-item with-google">
-      <b-button variant="primary" class="log-name-button sign-button">Sign Up with Google</b-button>
+      <b-button variant="primary" class="log-name-button sign-button" @click="onSignUpWithGoogle">Sign Up with Google</b-button>
     </b-row>
   </div>
 </template>
@@ -21,6 +21,9 @@
     methods: {
       onSignUpWithEmail(){
         this.$emit( 'signUpOptions', 'signUpWithEmail' );
+      },
+      onSignUpWithGoogle(){
+        window.location = 'https://localhost/api/auth/google/';
       }
     }
   }

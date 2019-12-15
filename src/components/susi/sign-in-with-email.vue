@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -41,7 +43,29 @@ export default {
   },
   methods: {
     onSubmit(evt) {
-      this.$router.replace("/main");
+      try {
+        // Don't do anything with the response; Do not retry if POST request fails
+        axios({
+          method: "post",
+          url: "/api/login",
+          data: {
+            firstName: "Fred",
+            lastName: "Flintstone"
+          }
+        }).then(function(response) {
+            console.log(response);
+          })
+          .catch(function(error) {
+            console.log(error);
+          })
+          .finally(function() {
+            // always executed
+          });
+      } catch (error) {
+        // Take no action on failure
+        this.$router.replace("");
+      }
+
       evt.preventDefault();
     },
     onReset(evt) {

@@ -3,6 +3,7 @@ var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
 var db = require('./db');
+var cors = require('cors');
 
 // Connect to db
 db.mysql.connect();
@@ -35,7 +36,7 @@ const GOOGLE_CLIENT_SECRET = 'p0y9u6Qufh8j-FBffpq56iY1';
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "/auth/google/callback"
+    callbackURL: "https://localhost/api/auth/google/callback"
   },
   function (accessToken, refreshToken, profile, cb) {
     db.users.findOrCreate(profile, function (err, user) {
@@ -65,18 +66,21 @@ passport.deserializeUser(function (id, cb) {
 });
 
 const URL = {
-  DEFAULT: '/',
-  LOGIN: '/login',
-  LOGOUT: '/logout',
-  GOOGLE_AUTH: '/auth/google',
-  GOOGLE_AUTH_CALLBACK: '/auth/google/callback',
-  SESSION_TIMEOUT: '/sessionTimeout',
-  MAIN: '/main',
-  PROFILE: '/profile'
+  DEFAULT: '/api',
+  LOGIN: '/api/login',
+  LOGOUT: '/api/logout',
+  GOOGLE_AUTH: '/api/auth/google',
+  GOOGLE_AUTH_CALLBACK: '/api/auth/google/callback',
+  SESSION_TIMEOUT: '/api/sessionTimeout',
+  MAIN: '/api/main',
+  PROFILE: '/api/profile'
 };
 
 // Create a new Express application.
 var app = express();
+
+// Enable CSP
+app.use(cors());
 
 // Use application-level middleware for common functionality, including
 // logging, parsing, and session handling.
@@ -152,10 +156,7 @@ app.get(URL.GOOGLE_AUTH_CALLBACK,
   }),
   function (req, res) {
     // Successful authentication, redirect home.
-    res.send({
-      msg: 'Welcome!',
-      name: req.user.username
-    });
+    res.redirect('/main');
   });
 
 app.listen(3001);
