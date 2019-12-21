@@ -39,9 +39,10 @@ exports.findOrCreate = function (user, cb) {
       id: user.id,
       username: (user.name && user.name.givenName) || user.username,
       displayName: user.displayName || user.givenName || (user.name && user.name.givenName) || user.username,
-      email: Array.isArray(user.emails) ? user.emails[0].value : (user.email || 'changhaigu@126.com'),
+      email: Array.isArray(user.emails) ? user.emails[0].value : user.email,
       password: user.password,
-      streamId: user.streamId
+      streamId: user.streamId,
+      source: user.source
     };
 
     records.push(newRecord);

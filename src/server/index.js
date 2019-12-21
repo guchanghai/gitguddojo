@@ -9,14 +9,13 @@ var Guid = require('guid');
 var bunyan = require('bunyan');
 var logger = bunyan.createLogger({
   name: 'gitguddojo',
-  streams: [
-    {
+  streams: [{
       level: 'info',
-      path: './log/gitguddojo.log'            // log INFO and above to stdout
+      path: './log/gitguddojo.log' // log INFO and above to stdout
     },
     {
       level: 'error',
-      path: './log/gitguddojo-error.log'  // log ERROR and above to a file
+      path: './log/gitguddojo-error.log' // log ERROR and above to a file
     }
   ]
 });
@@ -69,7 +68,10 @@ passport.use(new GoogleStrategy({
     callbackURL: `https://localhost${URL.GOOGLE_AUTH_CALLBACK}`
   },
   function (accessToken, refreshToken, profile, cb) {
-    db.users.findOrCreate(profile, function (err, user, exist) {
+    db.users.findOrCreate({
+      ...profile,
+      source: 'google'
+    }, function (err, user, exist) {
       if (!exist) {
         try {
           db.mysql.addUser(user, () => {});
@@ -91,10 +93,13 @@ passport.use(new FacebookStrategy({
     clientID: FACEBOOK_CLIENT_ID,
     clientSecret: FACEBOOK_CLIENT_SECRET,
     callbackURL: `https://localhost${URL.FACEBOOK_AUTH_CALLBACK}`,
-    profileFields: ['id', 'name', 'email']
+    profileFields: ['id', 'name', 'emails']
   },
   function (accessToken, refreshToken, profile, cb) {
-    db.users.findOrCreate(profile, function (err, user, exist) {
+    db.users.findOrCreate({
+      ...profile,
+      source: 'facebook'
+    }, function (err, user, exist) {
       if (!exist) {
         try {
           db.mysql.addUser(user, () => {});
@@ -183,7 +188,8 @@ app.post(URL.SIGN_UP,
       username: req.body.username,
       email: req.body.email,
       password: req.body.password,
-      streamId: req.body.streamId
+      streamId: req.body.streamId,
+      source: 'own'
     };
 
     db.users.findOrCreate(profile, function (err, user) {
@@ -234,7 +240,9 @@ app.get(URL.GOOGLE_AUTH_CALLBACK,
 
 // Facebook Auth Sign In
 app.get(URL.FACEBOOK_AUTH,
-  passport.authenticate('facebook'));
+  passport.authenticate('facebook', {
+    scope: ['email']
+  }));
 
 app.get(URL.FACEBOOK_AUTH_CALLBACK,
   passport.authenticate('facebook', {
