@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import LoadScript from 'vue-plugin-load-script';
 
 import App from './app.vue';
 import BootstrapVue from 'bootstrap-vue';
@@ -16,6 +17,7 @@ Vue.config.productionTip = false;
 
 Vue.use(BootstrapVue);
 Vue.use(VueRouter);
+Vue.use(LoadScript);
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';

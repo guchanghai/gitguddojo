@@ -7,6 +7,8 @@ var db = require('./db');
 var cors = require('cors');
 var Guid = require('guid');
 var bunyan = require('bunyan');
+
+// logger for server index
 var logger = bunyan.createLogger({
   name: 'gitguddojo',
   streams: [{
@@ -135,6 +137,7 @@ passport.deserializeUser(function (id, cb) {
 
 // Create a new Express application.
 var app = express();
+var http = require('http').Server(app);
 
 // Enable CSP
 app.use(cors());
@@ -253,4 +256,17 @@ app.get(URL.FACEBOOK_AUTH_CALLBACK,
     res.redirect('/main');
   });
 
-app.listen(3001);
+var io = require('socket.io')(http);
+
+io.on('connection', function (socket) {
+  logger.info('a user connected');
+
+  socket.on('chat message', function (msg) {
+    logger.info('receive message: ', msg);
+    io.emit('chat message', msg);
+  });
+});
+
+http.listen(3001, () => {
+  logger.info('listening on 3001');
+});
