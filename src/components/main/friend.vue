@@ -59,6 +59,7 @@ export default {
       .then(
         function(response) {
           this.friends = response.data.friends;
+          window.friends = this.friends;
         }.bind(this)
       );
   },

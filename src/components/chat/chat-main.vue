@@ -2,6 +2,13 @@
   <!-- Chat Modal dialog -->
   <div>
     <div class="chat-content">
+      <div class="chat-header">
+        <div>{{chatUsers}}</div>
+        <div>
+          <span><img class="chat-amount-img" src="../../assets/member-icon.png"/></span>
+          <span>{{chatUsersAmount}}</span>
+        </div>
+      </div>
       <b-list-group id="messages">
         <div v-for="message in messages" :key="message.time.toString()">
           <b-list-group-item>
@@ -90,12 +97,22 @@ export default {
     initOptions() {},
     onSubmit() {
       this.socket.emit("message", this.form.message);
+      this.form.message = "";
     },
     keyMonitor() {
       if (event.key == "Enter") {
         this.onSubmit();
-        this.form.message = '';
       }
+    }
+  },
+  computed: {
+    chatUsersAmount() {
+      return window.friends ? window.friends.length : 0;
+    },
+    chatUsers() {
+      return window.friends
+        ? window.friends.map(user => user.name).join(" , ")
+        : "";
     }
   }
 };
@@ -104,6 +121,15 @@ export default {
 <style scoped>
 .chat-content {
   text-align: left;
+}
+
+.chat-header {
+  padding: 5px 20px;
+  background-color: white;
+}
+
+.chat-amount-img {
+  width: 25px;
 }
 
 form {
@@ -134,7 +160,7 @@ form button {
 #messages {
   list-style-type: none;
   padding: 0;
-  max-height: 580px;
+  max-height: 540px;
   overflow-y: auto;
   scroll-behavior: auto;
 }
