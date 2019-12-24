@@ -150,7 +150,7 @@ export default {
 }
 
 .main-action-area {
-  padding-top: 50px;
+  padding-top: 30px;
 }
 
 .show-profile {

@@ -23,8 +23,9 @@ var logger = bunyan.createLogger({
 });
 
 const URL = {
-  CHAT_ROOM: '/api/chat/room',
   DEFAULT: '/api',
+  CHAT_ROOM: '/api/chat/room',
+  FRIENDS: '/api/friends',
   LOGIN: '/api/login',
   LOGOUT: '/api/logout',
   GOOGLE_AUTH: '/api/auth/google',
@@ -202,6 +203,22 @@ app.post(URL.SIGN_UP,
           user
         });
       });
+    });
+  });
+
+app.get(URL.FRIENDS,
+  require('connect-ensure-login').ensureLoggedIn(URL.SESSION_TIMEOUT),
+  function (req, res) {
+    const friends = db.users.records.map( ( user) => {
+      return {
+        id: user.id,
+        name: user.username,
+        platforms: ["mxguy", "steam", "xbox"]
+      }
+    });
+
+    res.send({
+      friends
     });
   });
 

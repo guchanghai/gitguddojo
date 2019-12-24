@@ -42,23 +42,25 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   components: {},
   data() {
     return {
-      friends: [
-        {
-          id: 0,
-          name: "Tommy",
-          platforms: ["mxguy", "steam", "xbox"]
-        },
-        {
-          id: 1,
-          name: "Tommy",
-          platforms: ["mxguy", "steam", "xbox"]
-        }
-      ]
+      friends: []
     };
+  },
+  mounted() {
+    axios
+      .get(
+        "/api/friends"
+      )
+      .then(
+        function(response) {
+          this.friends = response.data.friends;
+        }.bind(this)
+      );
   },
   methods: {
     startChat() {
@@ -72,6 +74,7 @@ export default {
 .friend-card-section {
   margin: auto 100px;
   display: flex;
+  flex-wrap: wrap;
 }
 
 .friend-card {
@@ -80,7 +83,7 @@ export default {
   height: 300px;
   border: 1px solid gray;
   border-radius: 10px;
-  margin: 20px 50px;
+  margin: 5px 35px;
 }
 
 .title {
@@ -151,11 +154,11 @@ export default {
 }
 
 .start-chat-button {
-  margin-top: 50px;
+  margin-top: 10px;
   bottom: 20px;
   width: 200px;
   height: 50px;
   font-weight: bold;
   font-size: 24px;
-};
+}
 </style>
