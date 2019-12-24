@@ -3,7 +3,7 @@
   <b-modal id="chat-modal" ref="chat-modal" @show="initOptions" centered hide-footer>
     <div class="chat-content">
       <b-list-group id="messages">
-        <div v-for="message in messages" :key="message.time">
+        <div v-for="message in messages" :key="message.time.toString()">
           <b-list-group-item>{{ message.content }}</b-list-group-item>
         </div>
       </b-list-group>
@@ -16,7 +16,9 @@
 </template>
 
 <script>
+import axios from "axios";
 import io from "socket.io-client";
+import qs from "qs";
 
 export default {
   components: {},
@@ -29,21 +31,42 @@ export default {
     };
   },
   mounted() {
-    this.socket = io();
-    this.socket.on(
-      "chat message",
-      function(msg) {
-        this.messages.push({
-          time: new Date(),
-          content: msg
-        });
-      }.bind(this)
-    );
+    axios
+      .post(
+        "/api/chat/room",
+        qs.stringify({
+          userId: "1",
+          users: ["1"]
+        })
+      )
+      .then(function(response) {
+        const roomId = response.data.id;
+
+        this.socket = io.connect(`/api/chat/${roomId}`);
+        this.socket.on(
+          "welcome-message",
+          function(msg) {
+            this.messages.push({
+              time: new Date(),
+              content: msg
+            });
+          }.bind(this)
+        );
+        this.socket.on(
+          "broadcast-message",
+          function(msg) {
+            this.messages.push({
+              time: new Date(),
+              content: msg
+            });
+          }.bind(this)
+        );
+      }.bind( this ));
   },
   methods: {
     initOptions() {},
     onSubmit() {
-      this.socket.emit("chat message", this.form.message);
+      this.socket.emit("message", this.form.message);
     }
   }
 };

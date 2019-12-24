@@ -23,6 +23,7 @@ var logger = bunyan.createLogger({
 });
 
 const URL = {
+  CHAT_ROOM: '/api/chat/room',
   DEFAULT: '/api',
   LOGIN: '/api/login',
   LOGOUT: '/api/logout',
@@ -256,16 +257,53 @@ app.get(URL.FACEBOOK_AUTH_CALLBACK,
     res.redirect('/main');
   });
 
+// chat functionality
 var io = require('socket.io')(http);
+const chatRooms = [];
 
-io.on('connection', function (socket) {
-  logger.info('a user connected');
+// Create or find chat room
+app.post(URL.CHAT_ROOM, (req, res) => {
+  const userId = req.body.userId;
 
-  socket.on('chat message', function (msg) {
-    logger.info('receive message: ', msg);
-    io.emit('chat message', msg);
-  });
-});
+  // find a chat room for current user
+  let room = chatRooms.find((room) => {
+    return room.users.includes(userId);
+  })
+
+  // create new room if not found
+  if (!room) {
+    room = {
+      id: Guid.raw(),
+      users: req.body.users
+    }
+
+    const roomId = `/api/chat/${room.id}`;
+    room.chat = io.of(roomId);
+
+    room.chat.on('connection', function (socket) {
+      // welcome message to the new user
+      socket.emit('welcome-message', {
+        msg: 'You are in the chat room now!'
+      });
+
+      // broadcast the message to everyone in the room
+      socket.on('message', (msg) => {
+        room.chat.emit('broadcast-message', {
+          msg
+        });
+      })
+    });
+
+    // remember the new room
+    chatRooms.push(room);
+  }
+
+  // return the room
+  res.send({
+    id: room.id,
+    room: room.users
+  })
+})
 
 http.listen(3001, () => {
   logger.info('listening on 3001');
