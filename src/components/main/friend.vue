@@ -1,51 +1,49 @@
 <template>
-  <div class="friend-card-section">
-    <div v-for="friend in friends" :key="friend.id">
-      <b-container class="friend-card">
-        <b-row class="title">
-          <b-col>
-            <img class="platform-item-img" src="../../assets/profile-header-icon.png" />
-            <span class="title-text">{{ friend.name }}</span>
-          </b-col>
-        </b-row>
-        <b-row class="detail">
-          <b-col class="detail-title">Platform ID</b-col>
-          <b-col class="detail-platform">
-            <div v-for="platform in friend.platforms" :key="platform">
-              <b-col class="platform-item">
-                <span>
-                  <img class="platform-item-img" src="../../assets/platform-a.svg" />
-                </span>
-                <span>{{ platform }}</span>
-              </b-col>
-            </div>
-          </b-col>
-          <b-col class="detail-action">
-            <b-button class="action-button invite" @click="startChat">Select</b-button>
-            <b-button class="action-button decline">Decline</b-button>
-          </b-col>
-        </b-row>
-        <b-row class="operation">
-          <b-col class="operation-title">Top Operations</b-col>
-          <b-col class="operation-platform">
-            <img class="operation-item" src="../../assets/operation-a.svg" />
-            <img class="operation-item" src="../../assets/operation-b.svg" />
-            <img class="operation-item" src="../../assets/operation-c.svg" />
-          </b-col>
-        </b-row>
-      </b-container>
+  <div>
+    <div class="friend-card-section">
+      <div v-for="friend in friends" :key="friend.id">
+        <b-container class="friend-card">
+          <b-row class="title">
+            <b-col>
+              <img class="platform-item-img" src="../../assets/profile-header-icon.png" />
+              <span class="title-text">{{ friend.name }}</span>
+            </b-col>
+          </b-row>
+          <b-row class="detail">
+            <b-col class="detail-title">Platform ID</b-col>
+            <b-col class="detail-platform">
+              <div v-for="platform in friend.platforms" :key="platform">
+                <b-col class="platform-item">
+                  <span>
+                    <img class="platform-item-img" src="../../assets/platform-a.svg" />
+                  </span>
+                  <span>{{ platform }}</span>
+                </b-col>
+              </div>
+            </b-col>
+            <b-col class="detail-action">
+              <b-button class="action-button invite" @click="startChat">Select</b-button>
+              <b-button class="action-button decline">Decline</b-button>
+            </b-col>
+          </b-row>
+          <b-row class="operation">
+            <b-col class="operation-title">Top Operations</b-col>
+            <b-col class="operation-platform">
+              <img class="operation-item" src="../../assets/operation-a.svg" />
+              <img class="operation-item" src="../../assets/operation-b.svg" />
+              <img class="operation-item" src="../../assets/operation-c.svg" />
+            </b-col>
+          </b-row>
+        </b-container>
+      </div>
     </div>
-    <chat-dialog />
+    <b-button type="submit" variant="primary" class="start-chat-button" @click="startChat">OK</b-button>
   </div>
 </template>
 
 <script>
-import chatDialog from "../chat/chat-dialog";
-
 export default {
-  components: {
-    chatDialog
-  },
+  components: {},
   data() {
     return {
       friends: [
@@ -64,7 +62,7 @@ export default {
   },
   methods: {
     startChat() {
-      this.$bvModal.show("chat-modal");
+      this.$router.replace("/main/chat");
     }
   }
 };
@@ -151,4 +149,13 @@ export default {
 .operation-item {
   margin: 0px 20px;
 }
+
+.start-chat-button {
+  margin-top: 50px;
+  bottom: 20px;
+  width: 200px;
+  height: 50px;
+  font-weight: bold;
+  font-size: 24px;
+};
 </style>
