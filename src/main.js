@@ -8,6 +8,7 @@ import BootstrapVue from 'bootstrap-vue';
 import Main from './pages/main.vue';
 import Landing from './pages/landing.vue';
 import Friend from './components/main/friend.vue';
+import ChatMain from './components/chat/chat-main.vue';
 import Welcome from './components/main/welcome.vue';
 import Profile from './components/settings/profile.vue';
 import Password from './components/settings/password.vue';
@@ -30,6 +31,7 @@ const routes = [
     children: [
       // Friend card
       { path: 'friend', component: Friend },
+      { path: 'chat', component: ChatMain },
       { path: 'profile', component: Profile },
       { path: 'password', component: Password },
       { path: 'platform', component: Platform },
