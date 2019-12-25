@@ -2,7 +2,10 @@
   <div>
     <div class="friend-card-section">
       <div v-for="friend in friends" :key="friend.id">
-        <b-container class="friend-card">
+        <b-container
+          class="friend-card"
+          :class="selectedFriendIds.includes( friend.id ) ? 'selected' : ''"
+        >
           <b-row class="title">
             <b-col>
               <img class="platform-item-img" src="../../assets/profile-header-icon.png" />
@@ -22,8 +25,8 @@
               </div>
             </b-col>
             <b-col class="detail-action">
-              <b-button class="action-button invite" @click="startChat">Select</b-button>
-              <b-button class="action-button decline">Decline</b-button>
+              <b-button class="action-button invite" @click="confirm(friend.id)">Select</b-button>
+              <b-button class="action-button decline" @click="decline(friend.id)">Decline</b-button>
             </b-col>
           </b-row>
           <b-row class="operation">
@@ -43,29 +46,47 @@
 
 <script>
 import axios from "axios";
+import { filter } from "minimatch";
 
 export default {
   components: {},
   data() {
     return {
-      friends: []
+      friends: [],
+      selectedFriends: [],
+      selectedFriendIds: []
     };
   },
   mounted() {
-    axios
-      .get(
-        "/api/friends"
-      )
-      .then(
-        function(response) {
-          this.friends = response.data.friends;
-          window.friends = this.friends;
-        }.bind(this)
-      );
+    axios.get("/api/friends").then(
+      function(response) {
+        this.friends = response.data.friends;
+        window.friends = this.friends;
+      }.bind(this)
+    );
   },
   methods: {
     startChat() {
       this.$router.replace("/main/chat");
+    },
+    confirm(friendId) {
+      if (!this.selectedFriendIds.includes(friendId)) {
+        this.selectedFriends.push(
+          this.friends.filter(friend => friend.id === friendId)[0]
+        );
+        this.updateFriends();
+      }
+    },
+    decline(friendId) {
+      this.friends = this.friends.filter(friend => friend.id !== friendId);
+      this.selectedFriends = this.selectedFriends.filter(
+        friend => friend.id !== friendId
+      );
+      this.updateFriends();
+    },
+    updateFriends() {
+      this.selectedFriendIds = this.selectedFriends.map(friend => friend.id);
+      window.friends = this.selectedFriends;
     }
   }
 };
@@ -85,6 +106,10 @@ export default {
   border: 1px solid gray;
   border-radius: 10px;
   margin: 5px 35px;
+}
+
+.selected {
+  background-color: azure;
 }
 
 .title {
