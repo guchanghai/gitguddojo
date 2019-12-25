@@ -5,8 +5,10 @@
       <div class="chat-header">
         <div>{{chatUsers}}</div>
         <div>
-          <span><img class="chat-amount-img" src="../../assets/member-icon.png"/></span>
-          <span>{{chatUsersAmount}}</span>
+          <span>
+            <img class="chat-amount-img" src="../../assets/member-icon.png" />
+          </span>
+          <span class="chat-amount-text">{{chatUsersAmount}}</span>
         </div>
       </div>
       <b-list-group id="messages">
@@ -15,10 +17,10 @@
             <div class="message-content">
               <div class="message-header">
                 <img src="../../assets/profile-header-icon.png" />
-                <span class="message-user-name">User Name</span>
+                <span class="message-user-name">{{ message.content.from }}</span>
                 <span class="message-time">{{ message.time.toLocaleString() }}</span>
               </div>
-              <div class="message-body">{{ message.content.msg }}</div>
+              <div class="message-body">{{ message.content.message }}</div>
             </div>
           </b-list-group-item>
         </div>
@@ -69,19 +71,19 @@ export default {
           this.socket = io.connect(`/api/chat/${roomId}`);
           this.socket.on(
             "welcome-message",
-            function(msg) {
+            function(message) {
               this.messages.push({
                 time: new Date(),
-                content: msg
+                content: message
               });
             }.bind(this)
           );
           this.socket.on(
             "broadcast-message",
-            function(msg) {
+            function(message) {
               this.messages.push({
                 time: new Date(),
-                content: msg
+                content: message
               });
 
               setTimeout(() => {
@@ -96,7 +98,10 @@ export default {
   methods: {
     initOptions() {},
     onSubmit() {
-      this.socket.emit("message", this.form.message);
+      this.socket.emit("message", {
+        from: window.user.username,
+        message: this.form.message
+      });
       this.form.message = "";
     },
     keyMonitor() {
@@ -131,6 +136,10 @@ export default {
 
 .chat-amount-img {
   width: 25px;
+}
+
+.chat-amount-text {
+  vertical-align: bottom;
 }
 
 form {

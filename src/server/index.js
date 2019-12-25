@@ -209,7 +209,7 @@ app.post(URL.SIGN_UP,
 app.get(URL.FRIENDS,
   require('connect-ensure-login').ensureLoggedIn(URL.SESSION_TIMEOUT),
   function (req, res) {
-    const friends = db.users.records.map( ( user) => {
+    const friends = db.users.records.map((user) => {
       return {
         id: user.id,
         name: user.username,
@@ -300,14 +300,13 @@ app.post(URL.CHAT_ROOM, (req, res) => {
     room.chat.on('connection', function (socket) {
       // welcome message to the new user
       socket.emit('welcome-message', {
-        msg: 'You are in the chat room now!'
+        from: 'System',
+        message: 'You are in the chat room now!'
       });
 
       // broadcast the message to everyone in the room
-      socket.on('message', (msg) => {
-        room.chat.emit('broadcast-message', {
-          msg
-        });
+      socket.on('message', (message) => {
+        room.chat.emit('broadcast-message', message);
       })
     });
 

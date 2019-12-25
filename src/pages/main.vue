@@ -77,6 +77,13 @@ export default {
       mode: ""
     };
   },
+  mounted() {
+    axios.get("/api/profile").then(
+      function(response) {
+        window.user = response.data.user;
+      }.bind(this)
+    );
+  },
   methods: {
     showProfile(evt) {
       this.mode = "profile";
