@@ -25,7 +25,6 @@
                 <div v-if="form.type === 'textarea'">
                     <b-form-textarea
                         id="textarea"
-                        v-model="text"
                         placeholder="Passionate about R6. Diamond player. Looking for serious, communicative team player to rank up together."
                         rows="4"
                         max-rows="6"

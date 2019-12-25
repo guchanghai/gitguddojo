@@ -3,7 +3,7 @@
     <div class="side-bar">
       <b-container class="side-bar-container" fluid>
         <b-row class="side-bar-header">
-          <b-col @click="showProfile" class="show-profile">My Dojo</b-col>
+          <b-col @click="changeMode" class="show-profile">{{modeTitle()}}</b-col>
         </b-row>
         <b-row class="side-bar-middle">
           <b-container fluid>
@@ -71,10 +71,15 @@
 <script>
 import axios from "axios";
 
+const MODE = {
+  dashboard: "dashboard",
+  profile: "profile"
+};
+
 export default {
   data() {
     return {
-      mode: ""
+      mode: MODE.dashboard
     };
   },
   mounted() {
@@ -85,8 +90,21 @@ export default {
     );
   },
   methods: {
-    showProfile(evt) {
-      this.mode = "profile";
+    changeMode(evt) {
+      if (this.showDashboard()) {
+        this.mode = "profile";
+        this.$router.replace("/main/profile");
+      } else {
+        this.mode = "dashboard";
+        this.$router.replace("/main");
+      }
+
+      evt.preventDefault();
+    },
+    showDashboard(){
+      return this.mode === MODE.dashboard;
+    },
+    showProfile(evt){
       this.$router.replace("/main/profile");
       evt.preventDefault();
     },
@@ -103,7 +121,16 @@ export default {
         this.$router.replace("/");
       });
       evt.preventDefault();
+    },
+    modeTitle() {
+      if(this.showDashboard()){
+        return 'My Dojo';
+      } else {
+      return "< Dashboard";
+      }
     }
+  },
+  computed: {
   }
 };
 </script>
