@@ -126,6 +126,7 @@ export default {
 .chat-header {
   padding: 5px 20px;
   background-color: white;
+  border-bottom-style: groove;
 }
 
 .chat-amount-img {

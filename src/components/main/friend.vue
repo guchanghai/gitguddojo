@@ -46,7 +46,6 @@
 
 <script>
 import axios from "axios";
-import { filter } from "minimatch";
 
 export default {
   components: {},
