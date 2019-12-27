@@ -85,7 +85,7 @@ export default {
   mounted() {
     axios.get("/api/profile").then(
       function(response) {
-        window.user = response.data.user;
+        this.$store.commit( 'profile', response.data.user );
       }.bind(this)
     );
   },

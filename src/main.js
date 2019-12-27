@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import Vuex from 'vuex'
 import VueRouter from 'vue-router';
 import LoadScript from 'vue-plugin-load-script';
 
@@ -16,6 +17,7 @@ import Platform from './components/settings/platform.vue';
 
 Vue.config.productionTip = false;
 
+Vue.use(Vuex);
 Vue.use(BootstrapVue);
 Vue.use(VueRouter);
 Vue.use(LoadScript);
@@ -23,22 +25,65 @@ Vue.use(LoadScript);
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
+// Vuex store
+const store = new Vuex.Store({
+  state: {
+    profile: ''
+  },
+  getters: {
+    profile: state => state.profile
+  },
+  mutations: {
+    profile(state, profile) {
+      state.profile = profile;
+    }
+  }
+});
+
 // Routs for pages
-const routes = [
-  { path: '/', component: Landing },
-  { path: '/landing', component: Landing },
-  { path: '/main', component: Main,
+const routes = [{
+    path: '/',
+    component: Landing
+  },
+  {
+    path: '/landing',
+    component: Landing
+  },
+  {
+    path: '/main',
+    component: Main,
     children: [
       // Friend card
-      { path: 'friend', component: Friend },
-      { path: 'chat', component: ChatMain },
-      { path: 'profile', component: Profile },
-      { path: 'password', component: Password },
-      { path: 'platform', component: Platform },
-      { path: '', component: Welcome },
+      {
+        path: 'friend',
+        component: Friend
+      },
+      {
+        path: 'chat',
+        component: ChatMain
+      },
+      {
+        path: 'profile',
+        component: Profile
+      },
+      {
+        path: 'password',
+        component: Password
+      },
+      {
+        path: 'platform',
+        component: Platform
+      },
+      {
+        path: '',
+        component: Welcome
+      },
     ]
   },
-  { path: '*', redirect: '/' }
+  {
+    path: '*',
+    redirect: '/'
+  }
 ];
 
 const router = new VueRouter({
@@ -48,6 +93,7 @@ const router = new VueRouter({
 
 // render function to mount the whole application
 new Vue({
-  render: createElement => createElement( App ),
+  render: createElement => createElement(App),
+  store,
   router
 }).$mount('#app-render-point');
