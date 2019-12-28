@@ -35,6 +35,7 @@ const URL = {
   PASSWORD: '/api/password',
   SESSION_TIMEOUT: '/api/sessionTimeout',
   SIGN_UP: '/api/signUp',
+  STREAM: '/api/stream',
   MAIN: '/api/main',
   PROFILE: '/api/profile'
 };
@@ -314,6 +315,34 @@ app.post(URL.PASSWORD,
       });
     });
   });
+
+  app.post(URL.STREAM,
+    require('connect-ensure-login').ensureLoggedIn(URL.SESSION_TIMEOUT),
+    function (req, res) {
+      const newUserInfo = req.body;
+
+      db.users.findById(newUserInfo.id, function (err, user) {
+        if (err) {
+          res.status(401).send({
+            msg: 'Cannot find the user!'
+          });
+          return;
+        }
+
+        if (user.streamId !== newUserInfo.streamId) {
+          res.status(401).send({
+            msg: 'You current stream ID is wrong!'
+          });
+          return;
+        }
+
+        db.mysql.updateStreamId(newUserInfo, (result) => {
+          res.send({
+            result
+          });
+        });
+      });
+    });
 
 // chat functionality
 var io = require('socket.io')(http);

@@ -78,3 +78,23 @@ exports.updatePassword = function (newUserInfo, cb) {
     });
 }
 
+exports.updateStreamId = function (newUserInfo, cb) {
+  connection.query('UPDATE users SET streamId = ? WHERE id = ?',
+    [newUserInfo.newStreamId, newUserInfo.id],
+    function (error, results) {
+
+      // get all the user info
+      connection.query('SELECT * from users', function (error, results) {
+        if (error) throw error;
+        users.records.length = 0;
+        users.records.push.apply(users.records, results);
+      });
+
+      if (error)
+        throw error;
+      else // Neat!
+        cb(null, results);
+    });
+}
+
+

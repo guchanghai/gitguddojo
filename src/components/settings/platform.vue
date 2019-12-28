@@ -7,7 +7,7 @@
         </b-col>
         <b-col sm="5">
           <div class="profile-header-info">
-            <b-row>Mr_Ashen_One</b-row>
+            <b-row>{{profile.username}}</b-row>
           </div>
         </b-col>
       </b-row>
@@ -16,7 +16,12 @@
           <label :for="`${form.id}`">{{ form.name }}</label>
         </b-col>
         <b-col sm="5">
-          <b-form-input :class="`${form.class}`" :id="`${form.id}`" :type="`${form.type}`"></b-form-input>
+          <b-form-input
+            :class="`${form.class}`"
+            :id="`${form.id}`"
+            :type="`${form.type}`"
+            v-model="form.value"
+          ></b-form-input>
         </b-col>
         <b-col sm="3" v-if="form.action">
           <b-button class="verify-btn" type="submit" variant="primary">Verify</b-button>
@@ -25,7 +30,7 @@
       <b-row>
         <b-col class="row-label" sm="4"></b-col>
         <b-col class="submit-col" sm="8">
-          <b-button class="submit-btn" type="submit" variant="primary">Submit</b-button>
+          <b-button class="submit-btn" type="submit" variant="primary" @click="onSubmit">Submit</b-button>
         </b-col>
       </b-row>
     </b-container>
@@ -33,23 +38,60 @@
 </template>
 
 <script>
+import axios from "axios";
+import { mapState } from "vuex";
+import qs from "qs";
+
 export default {
   data() {
     return {
       forms: [
         {
-          id: "streamID",
+          id: "streamId",
           name: "Current Steam ID",
-          type: "text"
+          type: "text",
+          value: ""
         },
         {
-          id: "changeId",
+          id: "newStreamId",
           name: "Change ID",
           type: "text",
           action: true
         }
       ]
     };
+  },
+  mounted() {
+    const profile = this.profile;
+
+    // initialize the session user info
+    this.forms.forEach(form => {
+      form.value = profile[`${form.id}`];
+    });
+  },
+  computed: mapState({
+    profile: state => state.profile
+  }),
+  methods: {
+    onSubmit() {
+      try {
+        var request = {
+          id: this.profile.id
+        };
+
+        this.forms.forEach(form => {
+          request[`${form.id}`] = form.value;
+        });
+
+        // Don't do anything with the response; Do not retry if POST request fails
+        axios.post("/api/stream", qs.stringify(request)).finally(function() {
+          // always executed
+        });
+      } catch (error) {
+        // Take no action on failure
+        this.$router.replace("");
+      }
+    }
   }
 };
 </script>
