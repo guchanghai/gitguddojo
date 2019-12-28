@@ -7,8 +7,8 @@
         </b-col>
         <b-col sm="7">
           <div class="profile-header-info">
-            <b-row>Mr_Ashen_One</b-row>
-            <b-row>(Steam ID: mxguy)</b-row>
+            <b-row>{{profile.username}}</b-row>
+            <b-row>(Steam ID: {{profile.streamId}})</b-row>
           </div>
         </b-col>
       </b-row>
@@ -18,27 +18,41 @@
         </b-col>
         <b-col sm="7">
           <div>
-            <b-form-input :class="`${form.class}`" :id="`${form.id}`" :type="`${form.type}`"></b-form-input>
+            <b-form-input
+              :class="`${form.class}`"
+              :id="`${form.id}`"
+              :type="`${form.type}`"
+              v-model="form.value"
+            ></b-form-input>
           </div>
         </b-col>
       </b-row>
       <b-row>
         <b-col class="row-label" sm="5"></b-col>
         <b-col class="submit-col" sm="7">
-          <b-button class="submit-btn" type="submit" variant="primary">Change Password</b-button>
+          <b-button
+            class="submit-btn"
+            type="submit"
+            variant="primary"
+            @click="onSubmit"
+          >Change Password</b-button>
         </b-col>
       </b-row>
-      <b-row class="forgot-password">
+      <!-- <b-row class="forgot-password">
         <b-col class="row-label" sm="5"></b-col>
         <b-col class="submit-col" sm="7">
           <a class="forgot-password-col" href>Forgot Password?</a>
         </b-col>
-      </b-row>
+      </b-row>-->
     </b-container>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import { mapState } from "vuex";
+import qs from "qs";
+
 export default {
   data() {
     return {
@@ -60,6 +74,39 @@ export default {
         }
       ]
     };
+  },
+  mounted() {},
+  computed: mapState({
+    profile: state => state.profile
+  }),
+  methods: {
+    onSubmit() {
+      var request = {
+        id: this.profile.id
+      };
+
+      this.forms.forEach(form => {
+        request[`${form.id}`] = form.value;
+      });
+
+      if (request.newPassword)
+        try {
+          // check old and new password
+          if (request.newPassword !== request.confirmNewPassword) {
+            return;
+          }
+
+          // Don't do anything with the response; Do not retry if POST request fails
+          axios
+            .post("/api/password", qs.stringify(request))
+            .finally(function() {
+              // always executed
+            });
+        } catch (error) {
+          // Take no action on failure
+          this.$router.replace("");
+        }
+    }
   }
 };
 </script>

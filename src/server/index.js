@@ -32,6 +32,7 @@ const URL = {
   GOOGLE_AUTH_CALLBACK: '/api/auth/google/callback',
   FACEBOOK_AUTH: '/api/auth/facebook',
   FACEBOOK_AUTH_CALLBACK: '/api/auth/facebook/callback',
+  PASSWORD: '/api/password',
   SESSION_TIMEOUT: '/api/sessionTimeout',
   SIGN_UP: '/api/signUp',
   MAIN: '/api/main',
@@ -249,7 +250,7 @@ app.post(URL.PROFILE,
   function (req, res) {
     const user = req.body;
 
-    db.mysql.updateUser(user, ( result ) => {
+    db.mysql.updateUser(user, (result) => {
       res.send({
         result
       });
@@ -284,6 +285,34 @@ app.get(URL.FACEBOOK_AUTH_CALLBACK,
   function (req, res) {
     // Successful authentication, redirect home.
     res.redirect('/main');
+  });
+
+app.post(URL.PASSWORD,
+  require('connect-ensure-login').ensureLoggedIn(URL.SESSION_TIMEOUT),
+  function (req, res) {
+    const newUserInfo = req.body;
+
+    db.users.findById(newUserInfo.id, function (err, user) {
+      if (err) {
+        res.status(401).send({
+          msg: 'Cannot find the user!'
+        });
+        return;
+      }
+
+      if (user.password !== newUserInfo.oldPassword) {
+        res.status(401).send({
+          msg: 'You current password is wrong!'
+        });
+        return;
+      }
+
+      db.mysql.updatePassword(newUserInfo, (result) => {
+        res.send({
+          result
+        });
+      });
+    });
   });
 
 // chat functionality
