@@ -26,18 +26,23 @@
               placeholder="Passionate about R6. Diamond player. Looking for serious, communicative team player to rank up together."
               rows="4"
               max-rows="6"
-              :v-model="`${form}`"
+              v-model="form.value"
             ></b-form-textarea>
           </div>
           <div v-else>
-            <b-form-input :class="`${form.class}`" :id="`${form.id}`" :type="`${form.type}`"></b-form-input>
+            <b-form-input
+              :class="`${form.class}`"
+              :id="`${form.id}`"
+              :type="`${form.type}`"
+              v-model="form.value"
+            ></b-form-input>
           </div>
         </b-col>
       </b-row>
       <b-row>
         <b-col class="row-label" sm="3"></b-col>
         <b-col class="submit-col" sm="9">
-          <b-button class="submit-btn" type="submit" variant="primary">Submit</b-button>
+          <b-button class="submit-btn" type="submit" variant="primary" @click="onSubmit">Submit</b-button>
         </b-col>
       </b-row>
     </b-container>
@@ -45,43 +50,72 @@
 </template>
 
 <script>
+import axios from "axios";
 import { mapState } from "vuex";
+import qs from "qs";
 
 export default {
   data() {
     return {
       forms: [
         {
-          id: "name",
+          id: "displayName",
           name: "Name",
-          type: "text"
+          type: "text",
+          value: ""
         },
         {
-          id: "userName",
+          id: "username",
           name: "User Name",
-          type: "text"
+          type: "text",
+          value: ""
         },
         {
           id: "email",
           name: "Email",
-          type: "email"
+          type: "email",
+          value: ""
         },
         {
           id: "bio",
           name: "Bio",
           type: "textarea",
+          value: "",
           class: "bio-info"
         }
-      ],
-      form: {}
+      ]
     };
   },
   mounted() {
-    this.form = this.profile;
+    const profile = this.profile;
+
+    // initialize the session user info
+    this.forms.forEach(form => {
+      form.value = profile[`${form.id}`];
+    });
   },
   computed: mapState({
     profile: state => state.profile
-  })
+  }),
+  methods: {
+    onSubmit() {
+      try {
+        var request = {};
+
+        this.forms.forEach(form => {
+          request[`${form.id}`] = form.value;
+        });
+
+        // Don't do anything with the response; Do not retry if POST request fails
+        axios.post("/api/profile/", qs.stringify(request)).finally(function() {
+          // always executed
+        });
+      } catch (error) {
+        // Take no action on failure
+        this.$router.replace("");
+      }
+    }
+  }
 };
 </script>
 
