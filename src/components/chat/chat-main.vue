@@ -42,6 +42,7 @@
 
 <script>
 import axios from "axios";
+import { mapState } from "vuex";
 import io from "socket.io-client";
 import qs from "qs";
 
@@ -99,7 +100,7 @@ export default {
     initOptions() {},
     onSubmit() {
       this.socket.emit("message", {
-        from: window.user.username,
+        from: this.profile.username,
         message: this.form.message
       });
       this.form.message = "";
@@ -111,6 +112,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      profile: state => state.profile
+    }),
     chatUsersAmount() {
       return window.friends ? window.friends.length : 0;
     },
