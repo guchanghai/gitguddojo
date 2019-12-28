@@ -100,14 +100,16 @@ export default {
   methods: {
     onSubmit() {
       try {
-        var request = {};
+        var request = {
+          id: this.profile.id
+        };
 
         this.forms.forEach(form => {
           request[`${form.id}`] = form.value;
         });
 
         // Don't do anything with the response; Do not retry if POST request fails
-        axios.post("/api/profile/", qs.stringify(request)).finally(function() {
+        axios.post("/api/profile", qs.stringify(request)).finally(function() {
           // always executed
         });
       } catch (error) {

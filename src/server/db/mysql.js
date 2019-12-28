@@ -38,3 +38,23 @@ exports.addUser = function (user, cb) {
 
   // console.log(query.sql);
 }
+
+exports.updateUser = function (user, cb) {
+
+  connection.query('UPDATE users SET displayName = ?, username = ?, email = ?, bio = ? WHERE id = ?',
+    [user.displayName, user.username, user.email, user.bio, user.id],
+    function (error, results) {
+
+      // get all the user info
+      connection.query('SELECT * from users', function (error, results) {
+        if (error) throw error;
+        users.records.length = 0;
+        users.records.push.apply(users.records, results);
+      });
+
+      if (error)
+        throw error;
+      else // Neat!
+        cb(null, results);
+    });
+}

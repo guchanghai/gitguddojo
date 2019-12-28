@@ -244,6 +244,18 @@ app.get(URL.PROFILE,
     });
   });
 
+app.post(URL.PROFILE,
+  require('connect-ensure-login').ensureLoggedIn(URL.SESSION_TIMEOUT),
+  function (req, res) {
+    const user = req.body;
+
+    db.mysql.updateUser(user, ( result ) => {
+      res.send({
+        result
+      });
+    });
+  });
+
 // Google Auth Sign In
 app.get(URL.GOOGLE_AUTH,
   passport.authenticate('google', {
