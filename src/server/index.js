@@ -24,6 +24,7 @@ var logger = bunyan.createLogger({
 
 const URL = {
   DEFAULT: '/api',
+  CHAT_ROOMS: '/api/chat/rooms',
   CHAT_ROOM: '/api/chat/room',
   FRIENDS: '/api/friends',
   LOGIN: '/api/login',
@@ -393,6 +394,16 @@ app.post(URL.CHAT_ROOM, (req, res) => {
   } else {
     response();
   }
+})
+
+app.get(URL.CHAT_ROOMS, (req, res) => {
+  const userId = req.query.userId;
+
+  db.mysql.findChatRooms(userId, (result) => {
+    res.send({
+      rooms: result
+    });
+  });
 })
 
 http.listen(3001, () => {

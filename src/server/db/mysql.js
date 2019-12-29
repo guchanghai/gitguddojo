@@ -101,8 +101,8 @@ exports.addChatRoom = function (room, cb) {
   const roomInfo = {};
 
   roomInfo.id = room.id;
-  roomInfo.userIDs = room.users.map( user => user.id ).join(',');
-  roomInfo.userNames = room.users.map( user => user.name ).join(',');
+  roomInfo.userIDs = room.users.map(user => user.id).join(',');
+  roomInfo.userNames = room.users.map(user => user.name).join(',');
   roomInfo.created = new Date();
   roomInfo.status = 0; // on going
 
@@ -112,5 +112,15 @@ exports.addChatRoom = function (room, cb) {
         throw error;
       else // Neat!
         cb(null, results);
+    });
+}
+
+exports.findChatRooms = function (userId, cb) {
+  connection.query('SELECT * from chat_rooms WHERE userIds like ? ORDER BY created', `%${userId}%`,
+    function (error, results) {
+      if (error)
+        throw error;
+      else // Neat!
+        cb(results);
     });
 }

@@ -33,7 +33,7 @@ const store = new Vuex.Store({
   },
   getters: {
     profile: state => state.profile,
-    friends: state => state.friends
+    friends: state => state.friends,
   },
   mutations: {
     profile(state, profile) {

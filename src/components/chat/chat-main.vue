@@ -50,6 +50,7 @@ export default {
   components: {},
   data() {
     return {
+      historyRooms: [],
       messages: [],
       form: {
         message: ""
@@ -57,44 +58,8 @@ export default {
     };
   },
   mounted() {
-    axios
-      .post(
-        "/api/chat/room",
-        qs.stringify({
-          userId: this.profile.id,
-          users: this.friends
-        })
-      )
-      .then(
-        function(response) {
-          const roomId = response.data.id;
-
-          this.socket = io.connect(`/api/chat/${roomId}`);
-          this.socket.on(
-            "welcome-message",
-            function(message) {
-              this.messages.push({
-                time: new Date(),
-                content: message
-              });
-            }.bind(this)
-          );
-          this.socket.on(
-            "broadcast-message",
-            function(message) {
-              this.messages.push({
-                time: new Date(),
-                content: message
-              });
-
-              setTimeout(() => {
-                this.$el.querySelector("#messages").scrollTop =
-                  this.$el.querySelector("#messages").scrollHeight + 112;
-              }, 500);
-            }.bind(this)
-          );
-        }.bind(this)
-      );
+    this.findChatHistory();
+    this.joinChatRoom();
   },
   methods: {
     initOptions() {},
@@ -109,6 +74,59 @@ export default {
       if (event.key == "Enter") {
         this.onSubmit();
       }
+    },
+    findChatHistory() {
+      axios
+        .get("/api/chat/rooms", {
+          params: {
+            userId: this.profile.id
+          }
+        })
+        .then(
+          function(response) {
+            this.historyRooms = response.data.rooms;
+          }.bind(this)
+        );
+    },
+    joinChatRoom() {
+      axios
+        .post(
+          "/api/chat/room",
+          qs.stringify({
+            userId: this.profile.id,
+            users: this.friends
+          })
+        )
+        .then(
+          function(response) {
+            const roomId = response.data.id;
+
+            this.socket = io.connect(`/api/chat/${roomId}`);
+            this.socket.on(
+              "welcome-message",
+              function(message) {
+                this.messages.push({
+                  time: new Date(),
+                  content: message
+                });
+              }.bind(this)
+            );
+            this.socket.on(
+              "broadcast-message",
+              function(message) {
+                this.messages.push({
+                  time: new Date(),
+                  content: message
+                });
+
+                setTimeout(() => {
+                  this.$el.querySelector("#messages").scrollTop =
+                    this.$el.querySelector("#messages").scrollHeight + 112;
+                }, 500);
+              }.bind(this)
+            );
+          }.bind(this)
+        );
     }
   },
   computed: {
