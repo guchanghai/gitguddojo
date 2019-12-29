@@ -21,6 +21,9 @@
                 </b-col>
               </b-row>
             </div>
+            <div v-else-if="this.mode === 'chat'">
+              <chat-history />
+            </div>
             <div v-else>
               <b-row align-v="start">
                 <b-col class="bar-middle-header">LFG Settings</b-col>
@@ -38,7 +41,7 @@
             </div>
           </b-container>
         </b-row>
-        <b-row class="side-bar-footer">
+        <b-row class="side-bar-footer" v-if="this.mode !== 'chat'">
           <b-container fluid>
             <b-row align-v="start">
               <b-col class="bar-middle-header">Contact Us</b-col>
@@ -69,42 +72,46 @@
 </template>
 
 <script>
+import chatHistory from "../components/chat/chat-history";
 import axios from "axios";
+import { mapGetters } from "vuex";
 
 const MODE = {
   dashboard: "dashboard",
+  chat: "chat",
   profile: "profile"
 };
 
 export default {
+  components: {
+    chatHistory
+  },
   data() {
-    return {
-      mode: MODE.dashboard
-    };
+    return {};
   },
   mounted() {
     axios.get("/api/profile").then(
       function(response) {
-        this.$store.commit( 'profile', response.data.user );
+        this.$store.commit("profile", response.data.user);
       }.bind(this)
     );
   },
   methods: {
     changeMode(evt) {
       if (this.showDashboard()) {
-        this.mode = "profile";
+        this.$store.commit("mode", MODE.profile);
         this.$router.replace("/main/profile");
       } else {
-        this.mode = "dashboard";
+        this.$store.commit("mode", MODE.dashboard);
         this.$router.replace("/main");
       }
 
       evt.preventDefault();
     },
-    showDashboard(){
+    showDashboard() {
       return this.mode === MODE.dashboard;
     },
-    showProfile(evt){
+    showProfile(evt) {
       this.$router.replace("/main/profile");
       evt.preventDefault();
     },
@@ -123,14 +130,15 @@ export default {
       evt.preventDefault();
     },
     modeTitle() {
-      if(this.showDashboard()){
-        return 'My Dojo';
+      if (this.showDashboard()) {
+        return "My Dojo";
       } else {
-      return "< Dashboard";
+        return "< Dashboard";
       }
     }
   },
   computed: {
+    ...mapGetters(["mode"])
   }
 };
 </script>

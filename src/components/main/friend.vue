@@ -65,6 +65,7 @@ export default {
   },
   methods: {
     startChat() {
+      this.$store.commit("mode", "chat");
       this.$router.replace("/main/chat");
     },
     confirm(friendId) {
@@ -88,9 +89,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      "friends"
-    ])
+    ...mapGetters(["friends"])
   }
 };
 </script>

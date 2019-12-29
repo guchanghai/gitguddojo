@@ -84,7 +84,7 @@ export default {
         })
         .then(
           function(response) {
-            this.historyRooms = response.data.rooms;
+            this.$store.commit("chatHistoryRooms", response.data.rooms);
           }.bind(this)
         );
     },

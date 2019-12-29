@@ -29,11 +29,15 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 const store = new Vuex.Store({
   state: {
     profile: {},
-    friends: []
+    friends: [],
+    chatHistoryRooms: [],
+    mode: ''
   },
   getters: {
     profile: state => state.profile,
     friends: state => state.friends,
+    chatHistoryRooms: state => state.chatHistoryRooms,
+    mode: state => state.mode
   },
   mutations: {
     profile(state, profile) {
@@ -41,6 +45,12 @@ const store = new Vuex.Store({
     },
     friends(state, friends) {
       state.friends = friends;
+    },
+    chatHistoryRooms(state, chatHistoryRooms) {
+      state.chatHistoryRooms = chatHistoryRooms;
+    },
+    mode: (state, mode) => {
+      state.mode = mode;
     }
   }
 });
