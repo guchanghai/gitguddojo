@@ -42,7 +42,7 @@
 
 <script>
 import axios from "axios";
-import { mapState } from "vuex";
+import { mapGetters } from "vuex";
 import io from "socket.io-client";
 import qs from "qs";
 
@@ -61,8 +61,8 @@ export default {
       .post(
         "/api/chat/room",
         qs.stringify({
-          userId: "1",
-          users: ["1"]
+          userId: this.profile.id,
+          users: this.friends
         })
       )
       .then(
@@ -112,15 +112,13 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      profile: state => state.profile
-    }),
+    ...mapGetters(["profile", "friends"]),
     chatUsersAmount() {
-      return window.friends ? window.friends.length : 0;
+      return this.friends ? this.friends.length : 0;
     },
     chatUsers() {
-      return window.friends
-        ? window.friends.map(user => user.name).join(" , ")
+      return this.friends
+        ? this.friends.map(user => user.name).join(" , ")
         : "";
     }
   }

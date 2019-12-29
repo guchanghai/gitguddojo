@@ -97,4 +97,20 @@ exports.updateStreamId = function (newUserInfo, cb) {
     });
 }
 
+exports.addChatRoom = function (room, cb) {
+  const roomInfo = {};
 
+  roomInfo.id = room.id;
+  roomInfo.userIDs = room.users.map( user => user.id ).join(',');
+  roomInfo.userNames = room.users.map( user => user.name ).join(',');
+  roomInfo.created = new Date();
+  roomInfo.status = 0; // on going
+
+  connection.query('INSERT INTO chat_rooms SET ?', roomInfo,
+    function (error, results) {
+      if (error)
+        throw error;
+      else // Neat!
+        cb(null, results);
+    });
+}

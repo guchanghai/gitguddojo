@@ -46,12 +46,12 @@
 
 <script>
 import axios from "axios";
+import { mapGetters } from "vuex";
 
 export default {
   components: {},
   data() {
     return {
-      friends: [],
       selectedFriends: [],
       selectedFriendIds: []
     };
@@ -59,8 +59,7 @@ export default {
   mounted() {
     axios.get("/api/friends").then(
       function(response) {
-        this.friends = response.data.friends;
-        window.friends = this.friends;
+        this.$store.commit("friends", response.data.friends);
       }.bind(this)
     );
   },
@@ -85,8 +84,13 @@ export default {
     },
     updateFriends() {
       this.selectedFriendIds = this.selectedFriends.map(friend => friend.id);
-      window.friends = this.selectedFriends;
+      this.$store.commit("friends", this.selectedFriends);
     }
+  },
+  computed: {
+    ...mapGetters([
+      "friends"
+    ])
   }
 };
 </script>
@@ -96,6 +100,8 @@ export default {
   margin: auto 100px;
   display: flex;
   flex-wrap: wrap;
+  height: 620px;
+  overflow-y: scroll;
 }
 
 .friend-card {

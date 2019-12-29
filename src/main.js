@@ -28,14 +28,19 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 // Vuex store
 const store = new Vuex.Store({
   state: {
-    profile: ''
+    profile: {},
+    friends: []
   },
   getters: {
-    profile: state => state.profile
+    profile: state => state.profile,
+    friends: state => state.friends
   },
   mutations: {
     profile(state, profile) {
       state.profile = profile;
+    },
+    friends(state, friends) {
+      state.friends = friends;
     }
   }
 });

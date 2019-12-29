@@ -316,33 +316,33 @@ app.post(URL.PASSWORD,
     });
   });
 
-  app.post(URL.STREAM,
-    require('connect-ensure-login').ensureLoggedIn(URL.SESSION_TIMEOUT),
-    function (req, res) {
-      const newUserInfo = req.body;
+app.post(URL.STREAM,
+  require('connect-ensure-login').ensureLoggedIn(URL.SESSION_TIMEOUT),
+  function (req, res) {
+    const newUserInfo = req.body;
 
-      db.users.findById(newUserInfo.id, function (err, user) {
-        if (err) {
-          res.status(401).send({
-            msg: 'Cannot find the user!'
-          });
-          return;
-        }
+    db.users.findById(newUserInfo.id, function (err, user) {
+      if (err) {
+        res.status(401).send({
+          msg: 'Cannot find the user!'
+        });
+        return;
+      }
 
-        if (user.streamId !== newUserInfo.streamId) {
-          res.status(401).send({
-            msg: 'You current stream ID is wrong!'
-          });
-          return;
-        }
+      if (user.streamId && user.streamId !== newUserInfo.streamId) {
+        res.status(401).send({
+          msg: 'You current stream ID is wrong!'
+        });
+        return;
+      }
 
-        db.mysql.updateStreamId(newUserInfo, (result) => {
-          res.send({
-            result
-          });
+      db.mysql.updateStreamId(newUserInfo, (result) => {
+        res.send({
+          result
         });
       });
     });
+  });
 
 // chat functionality
 var io = require('socket.io')(http);
@@ -353,9 +353,14 @@ app.post(URL.CHAT_ROOM, (req, res) => {
   const userId = req.body.userId;
 
   // find a chat room for current user
-  let room = chatRooms.find((room) => {
-    return room.users.includes(userId);
-  })
+  let room = chatRooms.find(room =>
+    room.users.find(user => user.id = userId)
+  );
+
+  const response = () => res.send({
+    id: room.id,
+    room: room.users
+  });
 
   // create new room if not found
   if (!room) {
@@ -382,13 +387,12 @@ app.post(URL.CHAT_ROOM, (req, res) => {
 
     // remember the new room
     chatRooms.push(room);
-  }
 
-  // return the room
-  res.send({
-    id: room.id,
-    room: room.users
-  })
+    // add room in db
+    db.mysql.addChatRoom(room, response);
+  } else {
+    response();
+  }
 })
 
 http.listen(3001, () => {

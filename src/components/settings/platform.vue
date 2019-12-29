@@ -39,7 +39,7 @@
 
 <script>
 import axios from "axios";
-import { mapState } from "vuex";
+import { mapGetters } from "vuex";
 import qs from "qs";
 
 export default {
@@ -69,9 +69,9 @@ export default {
       form.value = profile[`${form.id}`];
     });
   },
-  computed: mapState({
-    profile: state => state.profile
-  }),
+  computed: {
+    ...mapGetters(["profile"])
+  },
   methods: {
     onSubmit() {
       try {
