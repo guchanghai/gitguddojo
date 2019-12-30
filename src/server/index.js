@@ -378,14 +378,16 @@ app.post(URL.CHAT_ROOM, (req, res) => {
     room.chat.on('connection', function (socket) {
       // welcome message to the new user
       socket.emit('welcome-message', {
-        from: 'System',
+        userName: 'System',
+        time: new Date(),
         message: 'You are in the chat room now!'
       });
 
       // broadcast the message to everyone in the room
       socket.on('message', (message) => {
-        room.chat.emit('broadcast-message', message);
-        db.mysql.addChatHistory(room.id, message);
+        db.mysql.addChatHistory(room.id, message, (chatHistory) => {
+          room.chat.emit('broadcast-message', chatHistory);
+        });
       })
     });
 

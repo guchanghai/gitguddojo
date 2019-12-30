@@ -12,15 +12,15 @@
         </div>
       </div>
       <b-list-group id="messages">
-        <div v-for="message in messages" :key="message.time.toString()">
+        <div v-for="message in chatHistory" :key="message.time.toString()">
           <b-list-group-item>
             <div class="message-content">
               <div class="message-header">
                 <img src="../../assets/profile-header-icon.png" />
-                <span class="message-user-name">{{ message.content.from }}</span>
+                <span class="message-user-name">{{ message.userName }}</span>
                 <span class="message-time">{{ message.time.toLocaleString() }}</span>
               </div>
-              <div class="message-body">{{ message.content.message }}</div>
+              <div class="message-body">{{ message.message }}</div>
             </div>
           </b-list-group-item>
         </div>
@@ -51,18 +51,18 @@ export default {
   data() {
     return {
       historyRooms: [],
-      messages: [],
       form: {
         message: ""
       }
     };
   },
   mounted() {
-    this.joinChatRoom()
-      .then(() => {
-        this.findChatHistory();
-      })
-      .bind(this);
+    const self = this;
+    this.joinChatRoom().then(() => {
+      // set
+      // to include the new created room
+      self.findChatHistory();
+    });
   },
   methods: {
     initOptions() {},
@@ -104,24 +104,21 @@ export default {
         .then(
           function(response) {
             const roomId = response.data.id;
+            // Set current room ID
+            this.$store.commit("currentChatRoom", roomId);
 
             this.socket = io.connect(`/api/chat/${roomId}`);
             this.socket.on(
               "welcome-message",
               function(message) {
-                this.messages.push({
-                  time: new Date(),
-                  content: message
-                });
+                this.$store.commit('chatHistory', []);
+                this.$store.commit('chatMessage', message);
               }.bind(this)
             );
             this.socket.on(
               "broadcast-message",
               function(message) {
-                this.messages.push({
-                  time: new Date(),
-                  content: message
-                });
+                this.$store.commit('chatMessage', message);
 
                 setTimeout(() => {
                   this.$el.querySelector("#messages").scrollTop =
@@ -134,7 +131,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["profile", "friends"]),
+    ...mapGetters(["profile", "friends", "chatHistory"]),
     chatUsersAmount() {
       return this.friends ? this.friends.length : 0;
     },
@@ -142,6 +139,9 @@ export default {
       return this.friends
         ? this.friends.map(user => user.name).join(" , ")
         : "";
+    },
+    chatMessage() {
+      return this.chatHistory;
     }
   }
 };

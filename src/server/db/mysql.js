@@ -126,7 +126,7 @@ exports.findChatRooms = function (userId, cb) {
     });
 }
 
-exports.addChatHistory = function (roomId, message) {
+exports.addChatHistory = function (roomId, message, cb) {
   const history = {};
 
   history.id = Guid.raw();
@@ -140,11 +140,13 @@ exports.addChatHistory = function (roomId, message) {
     function (error) {
       if (error)
         throw error;
+      else
+        cb(history);
     });
 }
 
 exports.findChatRoomHistory = function (roomId, cb) {
-  connection.query('SELECT * from chat_logs WHERE roomId = ? ORDER BY time desc', roomId,
+  connection.query('SELECT * from chat_logs WHERE roomId = ? ORDER BY time', roomId,
     function (error, results) {
       if (error)
         throw error;

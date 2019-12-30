@@ -3,7 +3,7 @@
     <div class="history-title">Chat History</div>
     <b-list-group id="hisotry">
       <div v-for="history in chatHistoryRooms" :key="history.created">
-        <b-list-group-item @click="onItemSelect(history.id)">
+        <b-list-group-item @click="onItemSelect(history.id)" :class="isCurrentRoom(history.id) ? 'current-history' : ''">
           <div class="history-content">
             <div class="history-header">
               <img src="../../assets/profile-header-icon.png" />
@@ -20,7 +20,6 @@
 <script>
 import axios from "axios";
 import { mapGetters } from "vuex";
-// import qs from "qs";
 
 export default {
   components: {},
@@ -40,13 +39,17 @@ export default {
         })
         .then(
           function(response) {
+            this.$store.commit("currentChatRoom", roomId);
             this.$store.commit("chatHistory", response.data.history);
           }.bind(this)
         );
+    },
+    isCurrentRoom( roomId ){
+      return roomId === this.currentChatRoom;
     }
   },
   computed: {
-    ...mapGetters(["chatHistoryRooms"])
+    ...mapGetters(["chatHistoryRooms", "currentChatRoom"])
   }
 };
 </script>
@@ -55,6 +58,10 @@ export default {
 #hisotry {
   height: 687px;
   overflow-y: scroll;
+}
+
+.current-history {
+  background-color: cornsilk;
 }
 
 .history-title {
