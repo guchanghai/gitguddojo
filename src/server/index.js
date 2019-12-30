@@ -347,6 +347,8 @@ app.post(URL.STREAM,
 
 // chat functionality
 var io = require('socket.io')(http);
+
+// live chat rooms
 const chatRooms = [];
 
 // Create or find chat room
@@ -401,6 +403,14 @@ app.get(URL.CHAT_ROOMS, (req, res) => {
   const userId = req.query.userId;
 
   db.mysql.findChatRooms(userId, (result) => {
+
+    // mark live chat rooms with status=1
+    result.forEach(room => {
+      if (chatRooms.find(chatRoom => chatRoom.id === room.id)) {
+        room.status = 1;
+      }
+    })
+
     res.send({
       rooms: result
     });

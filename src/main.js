@@ -31,12 +31,14 @@ const store = new Vuex.Store({
     profile: {},
     friends: [],
     chatHistoryRooms: [],
+    chatHistory: [],
     mode: ''
   },
   getters: {
     profile: state => state.profile,
     friends: state => state.friends,
     chatHistoryRooms: state => state.chatHistoryRooms,
+    chatHistory: state => state.chatHistory,
     mode: state => state.mode
   },
   mutations: {
@@ -48,6 +50,9 @@ const store = new Vuex.Store({
     },
     chatHistoryRooms(state, chatHistoryRooms) {
       state.chatHistoryRooms = chatHistoryRooms;
+    },
+    chatHistory(state, chatHistory) {
+      state.chatHistory = chatHistory;
     },
     mode: (state, mode) => {
       state.mode = mode;

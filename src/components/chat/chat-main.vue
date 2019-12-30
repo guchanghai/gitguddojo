@@ -58,8 +58,11 @@ export default {
     };
   },
   mounted() {
-    this.findChatHistory();
-    this.joinChatRoom();
+    this.joinChatRoom()
+      .then(() => {
+        this.findChatHistory();
+      })
+      .bind(this);
   },
   methods: {
     initOptions() {},
@@ -90,7 +93,7 @@ export default {
         );
     },
     joinChatRoom() {
-      axios
+      return axios
         .post(
           "/api/chat/room",
           qs.stringify({

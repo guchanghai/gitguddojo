@@ -18,7 +18,7 @@
 </template>
 
 <script>
-// import axios from "axios";
+import axios from "axios";
 import { mapGetters } from "vuex";
 // import qs from "qs";
 
@@ -31,8 +31,18 @@ export default {
   },
   mounted() {},
   methods: {
-    onItemSelect(id) {
-      debugger
+    onItemSelect(roomId) {
+      axios
+        .get("/api/chat/room", {
+          params: {
+            roomId
+          }
+        })
+        .then(
+          function(response) {
+            this.$store.commit("chatHistory", response.data.history);
+          }.bind(this)
+        );
     }
   },
   computed: {
