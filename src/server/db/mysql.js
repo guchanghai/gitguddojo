@@ -1,5 +1,6 @@
 var mysql = require('mysql');
 var users = require('./users');
+var Guid = require('guid');
 
 var connection;
 
@@ -116,7 +117,34 @@ exports.addChatRoom = function (room, cb) {
 }
 
 exports.findChatRooms = function (userId, cb) {
-  connection.query('SELECT * from chat_rooms WHERE userIds like ? ORDER BY created', `%${userId}%`,
+  connection.query('SELECT * from chat_rooms WHERE userIds like ? ORDER BY created desc', `%${userId}%`,
+    function (error, results) {
+      if (error)
+        throw error;
+      else // Neat!
+        cb(results);
+    });
+}
+
+exports.addChatHistory = function (roomId, message) {
+  const history = {};
+
+  history.id = Guid.raw();
+  history.roomId = roomId;
+  history.userId = message.userId;
+  history.userName = message.from;
+  history.time = new Date();
+  history.message = message.message;
+
+  connection.query('INSERT INTO chat_logs SET ?', history,
+    function (error) {
+      if (error)
+        throw error;
+    });
+}
+
+exports.findChatRoomHistory = function (roomId, cb) {
+  connection.query('SELECT * from chat_logs WHERE roomId = ? ORDER BY time desc', roomId,
     function (error, results) {
       if (error)
         throw error;

@@ -66,6 +66,7 @@ export default {
     onSubmit() {
       this.socket.emit("message", {
         from: this.profile.username,
+        userId: this.profile.id,
         message: this.form.message
       });
       this.form.message = "";

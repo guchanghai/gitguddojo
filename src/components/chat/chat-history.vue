@@ -3,7 +3,7 @@
     <div class="history-title">Chat History</div>
     <b-list-group id="hisotry">
       <div v-for="history in chatHistoryRooms" :key="history.created">
-        <b-list-group-item>
+        <b-list-group-item @click="onItemSelect(history.id)">
           <div class="history-content">
             <div class="history-header">
               <img src="../../assets/profile-header-icon.png" />
@@ -31,7 +31,9 @@ export default {
   },
   mounted() {},
   methods: {
-    onItemSelect() {}
+    onItemSelect(id) {
+      debugger
+    }
   },
   computed: {
     ...mapGetters(["chatHistoryRooms"])
@@ -58,6 +60,10 @@ export default {
 
 .chat-amount-img {
   width: 25px;
+}
+
+.history-content {
+  cursor: pointer;
 }
 
 .history-body {

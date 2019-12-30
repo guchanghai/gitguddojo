@@ -383,6 +383,7 @@ app.post(URL.CHAT_ROOM, (req, res) => {
       // broadcast the message to everyone in the room
       socket.on('message', (message) => {
         room.chat.emit('broadcast-message', message);
+        db.mysql.addChatHistory(room.id, message);
       })
     });
 
@@ -404,7 +405,17 @@ app.get(URL.CHAT_ROOMS, (req, res) => {
       rooms: result
     });
   });
-})
+});
+
+app.get(URL.CHAT_ROOM, (req, res) => {
+  const roomId = req.query.roomId;
+
+  db.mysql.findChatRoomHistory(roomId, (result) => {
+    res.send({
+      history: result
+    });
+  });
+});
 
 http.listen(3001, () => {
   logger.info('listening on 3001');
