@@ -30,7 +30,7 @@ const store = new Vuex.Store({
   state: {
     profile: {},
     friends: [],
-    currentChatRoom: '',
+    currentChatRoom: {},
     chatHistoryRooms: [],
     chatHistory: [],
     mode: ''
@@ -38,6 +38,7 @@ const store = new Vuex.Store({
   getters: {
     profile: state => state.profile,
     friends: state => state.friends,
+    currentChatRoomId: state => state.currentChatRoom.id,
     currentChatRoom: state => state.currentChatRoom,
     chatHistoryRooms: state => state.chatHistoryRooms,
     chatHistory: state => state.chatHistory,
@@ -50,8 +51,8 @@ const store = new Vuex.Store({
     friends(state, friends) {
       state.friends = friends;
     },
-    currentChatRoom(state, currentChatRoom) {
-      state.currentChatRoom = currentChatRoom;
+    currentChatRoom(state, currentChatRoomId) {
+      state.currentChatRoom = state.chatHistoryRooms.find(room => room.id === currentChatRoomId)
     },
     chatHistoryRooms(state, chatHistoryRooms) {
       state.chatHistoryRooms = chatHistoryRooms;

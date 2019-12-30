@@ -39,17 +39,17 @@ export default {
         })
         .then(
           function(response) {
-            this.$store.commit("currentChatRoom", roomId);
             this.$store.commit("chatHistory", response.data.history);
+            this.$store.commit("currentChatRoom", roomId);
           }.bind(this)
         );
     },
     isCurrentRoom( roomId ){
-      return roomId === this.currentChatRoom;
+      return roomId === this.currentChatRoomId;
     }
   },
   computed: {
-    ...mapGetters(["chatHistoryRooms", "currentChatRoom"])
+    ...mapGetters(["chatHistoryRooms", "currentChatRoomId"])
   }
 };
 </script>

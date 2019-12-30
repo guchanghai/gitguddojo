@@ -25,7 +25,7 @@
           </b-list-group-item>
         </div>
       </b-list-group>
-      <b-form class="send-message-form">
+      <b-form v-if="isCurrentChatActive" class="send-message-form">
         <b-form-textarea
           id="message"
           v-model="form.message"
@@ -58,10 +58,13 @@ export default {
   },
   mounted() {
     const self = this;
-    this.joinChatRoom().then(() => {
+    this.joinChatRoom().then(roomId => {
       // set
       // to include the new created room
-      self.findChatHistory();
+      self.findChatHistory().then(() => {
+        // Set current room ID
+        this.$store.commit("currentChatRoom", roomId);
+      });
     });
   },
   methods: {
@@ -80,7 +83,7 @@ export default {
       }
     },
     findChatHistory() {
-      axios
+      return axios
         .get("/api/chat/rooms", {
           params: {
             userId: this.profile.id
@@ -104,21 +107,19 @@ export default {
         .then(
           function(response) {
             const roomId = response.data.id;
-            // Set current room ID
-            this.$store.commit("currentChatRoom", roomId);
 
             this.socket = io.connect(`/api/chat/${roomId}`);
             this.socket.on(
               "welcome-message",
               function(message) {
-                this.$store.commit('chatHistory', []);
-                this.$store.commit('chatMessage', message);
+                this.$store.commit("chatHistory", []);
+                this.$store.commit("chatMessage", message);
               }.bind(this)
             );
             this.socket.on(
               "broadcast-message",
               function(message) {
-                this.$store.commit('chatMessage', message);
+                this.$store.commit("chatMessage", message);
 
                 setTimeout(() => {
                   this.$el.querySelector("#messages").scrollTop =
@@ -126,12 +127,15 @@ export default {
                 }, 500);
               }.bind(this)
             );
+
+            // Set current room ID
+            return roomId;
           }.bind(this)
         );
     }
   },
   computed: {
-    ...mapGetters(["profile", "friends", "chatHistory"]),
+    ...mapGetters(["profile", "friends", "chatHistory", "currentChatRoom"]),
     chatUsersAmount() {
       return this.friends ? this.friends.length : 0;
     },
@@ -142,6 +146,9 @@ export default {
     },
     chatMessage() {
       return this.chatHistory;
+    },
+    isCurrentChatActive() {
+      return this.currentChatRoom && this.currentChatRoom.status === 1;
     }
   }
 };
