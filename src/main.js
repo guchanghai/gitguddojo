@@ -73,7 +73,8 @@ const store = new Vuex.Store({
     },
     notification: (state, notification) => {
       if (typeof notification === "string") {
-        state.notification.content = notification.content;
+        state.notification.content = notification;
+        state.notification.dismissSecs = 1;
       } else if (typeof notification === "number") {
         state.notification.dismissSecs = notification.dismissSecs;
       } else {

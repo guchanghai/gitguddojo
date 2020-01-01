@@ -106,10 +106,16 @@ export default {
           request[`${form.id}`] = form.value;
         });
 
+        const self = this;
         // Don't do anything with the response; Do not retry if POST request fails
-        axios.post("/api/profile", qs.stringify(request)).finally(function() {
-          // always executed
-        });
+        axios
+          .post("/api/profile", qs.stringify(request))
+          .then(() => {
+            self.$store.commit("notification", "Profile updated successfully!");
+          })
+          .finally(function() {
+            // always executed
+          });
       } catch (error) {
         // Take no action on failure
         this.$router.replace("");

@@ -90,6 +90,10 @@ export default {
     return {};
   },
   mounted() {
+    // default to dashboard
+    this.$store.commit("mode", "dashboard");
+
+    // get current user profile
     axios.get("/api/profile").then(
       function(response) {
         this.$store.commit("profile", response.data.user);

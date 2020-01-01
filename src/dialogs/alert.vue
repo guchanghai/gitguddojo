@@ -43,7 +43,7 @@ export default {
 }
 
 .content {
-  font-size: 36px;
+  font-size: 24px;
   margin-top: 10px;
 }
 </style>
