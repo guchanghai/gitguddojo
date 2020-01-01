@@ -56,12 +56,13 @@ export default {
               password: this.form.password
             })
           )
-          .then(function(response) {
-            console.log(response);
+          .then(function() {
             self.$router.replace("main");
           })
-          .catch(function(error) {
-            console.log(error);
+          .catch(function() {
+            self.$store.commit("notification", {
+              content: "login failed!"
+            });
           })
           .finally(function() {
             // always executed

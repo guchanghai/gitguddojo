@@ -33,7 +33,11 @@ const store = new Vuex.Store({
     currentChatRoom: {},
     chatHistoryRooms: [],
     chatHistory: [],
-    mode: ''
+    mode: '',
+    notification: {
+      content: '',
+      dismissSecs: 0
+    }
   },
   getters: {
     profile: state => state.profile,
@@ -42,7 +46,8 @@ const store = new Vuex.Store({
     currentChatRoom: state => state.currentChatRoom,
     chatHistoryRooms: state => state.chatHistoryRooms,
     chatHistory: state => state.chatHistory,
-    mode: state => state.mode
+    mode: state => state.mode,
+    notification: state => state.notification
   },
   mutations: {
     profile(state, profile) {
@@ -65,6 +70,16 @@ const store = new Vuex.Store({
     },
     mode: (state, mode) => {
       state.mode = mode;
+    },
+    notification: (state, notification) => {
+      if (typeof notification === "string") {
+        state.notification.content = notification.content;
+      } else if (typeof notification === "number") {
+        state.notification.dismissSecs = notification.dismissSecs;
+      } else {
+        state.notification.content = notification.content;
+        state.notification.dismissSecs = notification.dismissSecs !== undefined ? notification.dismissSecs : 1;
+      }
     }
   }
 });
