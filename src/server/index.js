@@ -218,7 +218,7 @@ app.get(URL.FRIENDS,
         name: user.username,
         platforms: ["mxguy", "steam", "xbox"]
       }
-    });
+    }).filter(friend => friend.id !== req.user.id);
 
     res.send({
       friends
@@ -353,12 +353,13 @@ const chatRooms = [];
 
 // Create or find chat room
 app.post(URL.CHAT_ROOM, (req, res) => {
-  const userId = req.body.userId;
+  let room = chatRooms.find(room => {
+    // room has same user amount
+    const sameUsersAmount = room.users.length === req.body.users.length;
 
-  // find a chat room for current user
-  let room = chatRooms.find(room =>
-    room.users.find(user => user.id = userId)
-  );
+    // all users are same
+    return sameUsersAmount && room.users.every( roomUser => req.body.users.find( user => user.id === roomUser.id ));
+  });
 
   const response = () => res.send({
     id: room.id,

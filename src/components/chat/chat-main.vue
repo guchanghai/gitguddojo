@@ -96,12 +96,23 @@ export default {
         );
     },
     joinChatRoom() {
+      const chatUsers = this.friends.map(friend => {
+        return {
+          id: friend.id,
+          name: friend.name
+        };
+      });
+
+      chatUsers.push({
+        id: this.profile.id,
+        name: this.profile.username
+      });
+
       return axios
         .post(
           "/api/chat/room",
           qs.stringify({
-            userId: this.profile.id,
-            users: this.friends
+            users: chatUsers
           })
         )
         .then(
@@ -137,12 +148,10 @@ export default {
   computed: {
     ...mapGetters(["profile", "friends", "chatHistory", "currentChatRoom"]),
     chatUsersAmount() {
-      return this.friends ? this.friends.length : 0;
+      return (this.currentChatRoom.userNames || "").split(",").length;
     },
     chatUsers() {
-      return this.friends
-        ? this.friends.map(user => user.name).join(" , ")
-        : "";
+      return this.currentChatRoom.userNames;
     },
     chatMessage() {
       return this.chatHistory;

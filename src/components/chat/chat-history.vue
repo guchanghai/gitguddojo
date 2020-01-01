@@ -85,5 +85,6 @@ export default {
 
 .history-body {
   overflow: hidden;
+  text-align: left;
 }
 </style>

@@ -1,11 +1,8 @@
 <template>
   <div>
     <div class="friend-card-section">
-      <div v-for="friend in friends" :key="friend.id">
-        <b-container
-          class="friend-card"
-          :class="selectedFriendIds.includes( friend.id ) ? 'selected' : ''"
-        >
+      <div v-for="friend in recommendFriends" :key="friend.id">
+        <b-container v-if="friend.status !== -1" class="friend-card" :class="friend.status === 1 ? 'selected' : ''">
           <b-row class="title">
             <b-col>
               <img class="platform-item-img" src="../../assets/profile-header-icon.png" />
@@ -25,8 +22,16 @@
               </div>
             </b-col>
             <b-col class="detail-action">
-              <b-button class="action-button invite" @click="confirm(friend.id)">Select</b-button>
-              <b-button class="action-button decline" @click="decline(friend.id)">Decline</b-button>
+              <b-button
+                class="action-button invite"
+                :disabled="friend.status === 1"
+                @click="confirm(friend.id)"
+              >Select</b-button>
+              <b-button
+                class="action-button decline"
+                :disabled="friend.status === -1"
+                @click="decline(friend.id)"
+              >Decline</b-button>
             </b-col>
           </b-row>
           <b-row class="operation">
@@ -46,50 +51,70 @@
 
 <script>
 import axios from "axios";
-import { mapGetters } from "vuex";
+
+const STATUS = {
+  SELECTED: 1,
+  DECLINED: -1,
+  DEFAULT: 0
+};
 
 export default {
   components: {},
   data() {
     return {
-      selectedFriends: [],
-      selectedFriendIds: []
+      recommendFriends: []
     };
   },
   mounted() {
     axios.get("/api/friends").then(
       function(response) {
-        this.$store.commit("friends", response.data.friends);
+        this.recommendFriends = response.data.friends.map(friend => {
+          return {
+            ...friend,
+            status: STATUS.DEFAULT
+          };
+        });
       }.bind(this)
     );
   },
   methods: {
     startChat() {
+      this.updateFriends();
       this.$store.commit("mode", "chat");
       this.$router.replace("/main/chat");
     },
     confirm(friendId) {
-      if (!this.selectedFriendIds.includes(friendId)) {
-        this.selectedFriends.push(
-          this.friends.filter(friend => friend.id === friendId)[0]
-        );
-        this.updateFriends();
-      }
+      const friend = this.recommendFriends.find(
+        friend => friend.id === friendId
+      );
+      friend.status = STATUS.SELECTED;
     },
     decline(friendId) {
-      this.friends = this.friends.filter(friend => friend.id !== friendId);
-      this.selectedFriends = this.selectedFriends.filter(
-        friend => friend.id !== friendId
+      const friend = this.recommendFriends.find(
+        friend => friend.id === friendId
       );
-      this.updateFriends();
+      friend.status = STATUS.DECLINED;
     },
     updateFriends() {
-      this.selectedFriendIds = this.selectedFriends.map(friend => friend.id);
-      this.$store.commit("friends", this.selectedFriends);
+      let selected = this.recommendFriends.filter(
+        friend => friend.status === STATUS.SELECTED
+      );
+      if (selected.length === 0) {
+        selected = this.recommendFriends.filter(
+          friend => friend.status !== STATUS.DECLINED
+        );
+      }
+
+      this.$store.commit("friends", selected);
     }
   },
   computed: {
-    ...mapGetters(["friends"])
+    isFriendConfirmed: friendId => {
+      const friend = this.recommendFriends.find(
+        friend => friend.id === friendId
+      );
+      return friend.status == 1;
+    }
   }
 };
 </script>
