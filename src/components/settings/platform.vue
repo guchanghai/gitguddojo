@@ -84,6 +84,10 @@ export default {
         });
 
         await axios.post("/api/stream", qs.stringify(request));
+
+        // get latest profile
+        await this.$store.dispatch("profile");
+
         this.$store.commit("notification", "Platform updated successfully!");
       } catch (error) {
         // Take no action on failure

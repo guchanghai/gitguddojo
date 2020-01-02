@@ -93,11 +93,17 @@ export default {
         try {
           // check old and new password
           if (request.newPassword !== request.confirmNewPassword) {
-            this.$store.commit("notification", "Two new passwords are different!");
+            this.$store.commit(
+              "notification",
+              "Two new passwords are different!"
+            );
             return;
           }
 
           await axios.post("/api/password", qs.stringify(request));
+          // get latest profile
+          await this.$store.dispatch("profile");
+
           this.$store.commit("notification", "Password updated successfully!");
         } catch (error) {
           // Take no action on failure

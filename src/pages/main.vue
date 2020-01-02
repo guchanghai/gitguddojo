@@ -98,8 +98,7 @@ export default {
     async checkUserSession() {
       // get current user profile
       try {
-        const profile = await axios.get("/api/profile");
-        this.$store.commit("profile", profile.data.user);
+        await this.$store.dispatch("profile");
       } catch (e) {
         this.$router.replace("/");
       }

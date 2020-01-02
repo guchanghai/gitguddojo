@@ -107,10 +107,14 @@ export default {
         });
 
         await axios.post("/api/profile", qs.stringify(request));
-        self.$store.commit("notification", "Profile updated successfully!");
+
+        // get latest profile
+        await this.$store.dispatch("profile");
+
+        this.$store.commit("notification", "Profile updated successfully!");
       } catch (error) {
         // Take no action on failure
-        self.$store.commit("notification", "Profile updated failed!");
+        this.$store.commit("notification", "Profile updated failed!");
       }
     }
   }
