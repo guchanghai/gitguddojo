@@ -9,9 +9,6 @@
           <div class="profile-header-info">
             <b-row>{{profile.username}}</b-row>
             <b-row>(Steam ID: {{profile.streamId}})</b-row>
-            <b-row class="change-profile-photo">
-              <a href="#">Change profile photo</a>
-            </b-row>
           </div>
         </b-col>
       </b-row>
@@ -20,9 +17,17 @@
           <label :for="`${form.id}`">{{ form.name }}</label>
         </b-col>
         <b-col sm="9">
-          <div v-if="form.type === 'textarea'">
+          <div v-if="form.type === 'file'">
+            <b-form-file
+              placeholder="Select an image file."
+              accept="image/jpeg, image/png, image/gif"
+              rows="4"
+              max-rows="6"
+              v-model="profilePhoto"
+            ></b-form-file>
+          </div>
+          <div v-else-if="form.type === 'textarea'">
             <b-form-textarea
-              id="textarea"
               placeholder="Passionate about R6. Diamond player. Looking for serious, communicative team player to rank up together."
               rows="4"
               max-rows="6"
@@ -82,8 +87,16 @@ export default {
           type: "textarea",
           value: "",
           class: "bio-info"
+        },
+        {
+          id: "photo",
+          name: "Photo Image",
+          type: "file",
+          value: "",
+          class: "photo-info"
         }
-      ]
+      ],
+      profilePhoto: null
     };
   },
   mounted() {
@@ -106,6 +119,8 @@ export default {
           request[`${form.id}`] = form.value;
         });
 
+        request.profilePhoto = this.profilePhoto;
+
         await axios.post("/api/profile", qs.stringify(request));
 
         // get latest profile
@@ -116,6 +131,9 @@ export default {
         // Take no action on failure
         this.$store.commit("notification", "Profile updated failed!");
       }
+    },
+    uploadFile(){
+      this.$refs['profile-photo-input'].$el.click();
     }
   }
 };
