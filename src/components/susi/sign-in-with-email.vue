@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+    <b-form>
       <b-form-group id="input-group-email" label-for="input-email">
         <b-form-input
           id="input-email"
@@ -20,9 +20,8 @@
           placeholder="Password"
         ></b-form-input>
       </b-form-group>
-
-      <b-button calss="action-button" type="Sign Up" variant="primary">Log In</b-button>
     </b-form>
+    <b-button calss="action-button" type="Sign Up" variant="primary" @click="onSubmit">Log In</b-button>
   </div>
 </template>
 
@@ -38,54 +37,26 @@ export default {
         userName: "",
         steamId: "",
         password: ""
-      },
-      show: true
+      }
     };
   },
   methods: {
-    onSubmit(evt) {
+    async onSubmit(evt) {
       try {
-        var self = this;
+        await axios.post(
+          "/api/login/",
+          qs.stringify({
+            username: this.form.email,
+            password: this.form.password
+          })
+        );
 
-        // Don't do anything with the response; Do not retry if POST request fails
-        axios
-          .post(
-            "/api/login/",
-            qs.stringify({
-              username: this.form.email,
-              password: this.form.password
-            })
-          )
-          .then(function() {
-            self.$router.replace("main");
-          })
-          .catch(function() {
-            self.$store.commit("notification", {
-              content: "login failed!"
-            });
-          })
-          .finally(function() {
-            // always executed
-          });
+        this.$router.replace("main");
       } catch (error) {
-        // Take no action on failure
-        this.$router.replace("");
+        this.$store.commit("notification", "login in failed!");
       }
 
       evt.preventDefault();
-    },
-    onReset(evt) {
-      evt.preventDefault();
-
-      // Reset our form values
-      this.form.email = "";
-      this.form.password = "";
-
-      // Trick to reset/clear native browser form validation state
-      this.show = false;
-      this.$nextTick(() => {
-        this.show = true;
-      });
     }
   }
 };

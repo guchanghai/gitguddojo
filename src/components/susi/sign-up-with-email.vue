@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+    <b-form>
       <b-form-group id="input-group-email" label-for="input-email">
         <b-form-input
           id="input-email"
@@ -28,10 +28,10 @@
           placeholder="Password"
         ></b-form-input>
       </b-form-group>
-
-      <b-button calss="action-button" type="Sign Up" variant="primary">Submit</b-button>
-      <b-button class="action-button" type="Reset" variant="danger">Reset</b-button>
     </b-form>
+
+    <b-button calss="action-button" type="Sign Up" variant="primary" @click="onSubmit">Submit</b-button>
+    <b-button class="action-button" type="Reset" variant="danger" @click="onReset">Reset</b-button>
   </div>
 </template>
 
@@ -52,34 +52,31 @@ export default {
     };
   },
   methods: {
-    onSubmit(evt) {
+    async onSubmit(evt) {
       try {
-        var self = this;
+        await axios.post(
+          "/api/signUp/",
+          qs.stringify({
+            username: this.form.userName,
+            email: this.form.email,
+            password: this.form.password,
+            streamId: this.form.streamId
+          })
+        );
 
-        // Don't do anything with the response; Do not retry if POST request fails
-        axios
-          .post(
-            "/api/signUp/",
-            qs.stringify({
-              username: this.form.userName,
-              email: this.form.email,
-              password: this.form.password,
-              streamId: this.form.streamId
-            })
-          )
-          .then(function(response) {
-            console.log(response);
-            self.$router.replace("main");
+        await axios.post(
+          "/api/login/",
+          qs.stringify({
+            username: this.form.email,
+            password: this.form.password
           })
-          .catch(function(error) {
-            console.log(error);
-          })
-          .finally(function() {
-            // always executed
-          });
+        );
+
+        this.$router.replace("main");
       } catch (error) {
-        // Take no action on failure
-        this.$router.replace("");
+        this.$store.commit("notification", {
+          content: "Sign up failed!"
+        });
       }
       evt.preventDefault();
     },
