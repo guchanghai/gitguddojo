@@ -89,18 +89,21 @@ export default {
   data() {
     return {};
   },
-  mounted() {
+  async mounted() {
+    await this.checkUserSession();
     // default to dashboard
     this.$store.commit("mode", "dashboard");
-
-    // get current user profile
-    axios.get("/api/profile").then(
-      function(response) {
-        this.$store.commit("profile", response.data.user);
-      }.bind(this)
-    );
   },
   methods: {
+    async checkUserSession() {
+      // get current user profile
+      try {
+        const profile = await axios.get("/api/profile");
+        this.$store.commit("profile", profile.data.user);
+      } catch (e) {
+        this.$router.replace("/");
+      }
+    },
     changeMode(evt) {
       if (this.showDashboard()) {
         this.$store.commit("mode", MODE.profile);
