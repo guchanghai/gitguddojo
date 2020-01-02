@@ -130,10 +130,13 @@ export default {
       this.$router.replace("/main/platform");
       evt.preventDefault();
     },
-    signOut(evt) {
-      axios.get("/api/logout/").then(() => {
-        this.$router.replace("/");
-      });
+    async signOut(evt) {
+      try {
+        await axios.get("/api/logout/");
+      } catch (e) {
+        // TODO: logging
+      }
+      this.$router.replace("/");
       evt.preventDefault();
     },
     modeTitle() {
