@@ -73,7 +73,7 @@ export default {
     ...mapGetters(["profile"])
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
       try {
         var request = {
           id: this.profile.id
@@ -83,13 +83,11 @@ export default {
           request[`${form.id}`] = form.value;
         });
 
-        // Don't do anything with the response; Do not retry if POST request fails
-        axios.post("/api/stream", qs.stringify(request)).finally(function() {
-          // always executed
-        });
+        await axios.post("/api/stream", qs.stringify(request));
+        this.$store.commit("notification", "Platform updated successfully!");
       } catch (error) {
         // Take no action on failure
-        this.$router.replace("");
+        this.$store.commit("notification", "Platform updated failed!");
       }
     }
   }

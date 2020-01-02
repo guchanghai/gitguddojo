@@ -80,7 +80,7 @@ export default {
     ...mapGetters(["profile"])
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
       var request = {
         id: this.profile.id
       };
@@ -93,18 +93,15 @@ export default {
         try {
           // check old and new password
           if (request.newPassword !== request.confirmNewPassword) {
+            this.$store.commit("notification", "Two new passwords are different!");
             return;
           }
 
-          // Don't do anything with the response; Do not retry if POST request fails
-          axios
-            .post("/api/password", qs.stringify(request))
-            .finally(function() {
-              // always executed
-            });
+          await axios.post("/api/password", qs.stringify(request));
+          this.$store.commit("notification", "Password updated successfully!");
         } catch (error) {
           // Take no action on failure
-          this.$router.replace("");
+          this.$store.commit("notification", "Password updated failed!");
         }
     }
   }

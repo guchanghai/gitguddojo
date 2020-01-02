@@ -96,7 +96,7 @@ export default {
   },
   computed: mapGetters(["profile"]),
   methods: {
-    onSubmit() {
+    async onSubmit() {
       try {
         var request = {
           id: this.profile.id
@@ -106,19 +106,11 @@ export default {
           request[`${form.id}`] = form.value;
         });
 
-        const self = this;
-        // Don't do anything with the response; Do not retry if POST request fails
-        axios
-          .post("/api/profile", qs.stringify(request))
-          .then(() => {
-            self.$store.commit("notification", "Profile updated successfully!");
-          })
-          .finally(function() {
-            // always executed
-          });
+        await axios.post("/api/profile", qs.stringify(request));
+        self.$store.commit("notification", "Profile updated successfully!");
       } catch (error) {
         // Take no action on failure
-        this.$router.replace("");
+        self.$store.commit("notification", "Profile updated failed!");
       }
     }
   }
