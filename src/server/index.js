@@ -1,4 +1,5 @@
 var express = require('express');
+const fileUpload = require('express-fileupload');
 var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -38,7 +39,8 @@ const URL = {
   SIGN_UP: '/api/signUp',
   STREAM: '/api/stream',
   MAIN: '/api/main',
-  PROFILE: '/api/profile'
+  PROFILE: '/api/profile',
+  PHOTO: '/api/photo'
 };
 
 // Connect to db
@@ -165,6 +167,8 @@ app.use(require('express-session')({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(fileUpload());
+
 // Define routes.
 app.get(URL.DEFAULT,
   function (req, res) {
@@ -253,6 +257,18 @@ app.post(URL.PROFILE,
     const user = req.body;
 
     db.mysql.updateUser(user, (result) => {
+      res.send({
+        result
+      });
+    });
+  });
+
+app.post(URL.PHOTO,
+  require('connect-ensure-login').ensureLoggedIn(URL.SESSION_TIMEOUT),
+  function (req, res) {
+    const photo = req.files;
+
+    db.mysql.updateUserPhoto(req.user.id, photo, (result) => {
       res.send({
         result
       });
@@ -358,7 +374,7 @@ app.post(URL.CHAT_ROOM, (req, res) => {
     const sameUsersAmount = room.users.length === req.body.users.length;
 
     // all users are same
-    return sameUsersAmount && room.users.every( roomUser => req.body.users.find( user => user.id === roomUser.id ));
+    return sameUsersAmount && room.users.every(roomUser => req.body.users.find(user => user.id === roomUser.id));
   });
 
   const response = () => res.send({

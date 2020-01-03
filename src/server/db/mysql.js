@@ -60,6 +60,26 @@ exports.updateUser = function (user, cb) {
     });
 }
 
+exports.updateUserPhoto = function (userId, photo, cb) {
+
+  connection.query('UPDATE users SET photo = ? WHERE id = ?',
+    [photo, userId],
+    function (error, results) {
+
+      // get all the user info
+      connection.query('SELECT * from users', function (error, results) {
+        if (error) throw error;
+        users.records.length = 0;
+        users.records.push.apply(users.records, results);
+      });
+
+      if (error)
+        throw error;
+      else // Neat!
+        cb(null, results);
+    });
+}
+
 exports.updatePassword = function (newUserInfo, cb) {
   connection.query('UPDATE users SET password = ? WHERE id = ?',
     [newUserInfo.newPassword, newUserInfo.id],

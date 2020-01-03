@@ -119,9 +119,15 @@ export default {
           request[`${form.id}`] = form.value;
         });
 
-        request.profilePhoto = this.profilePhoto;
-
         await axios.post("/api/profile", qs.stringify(request));
+
+        if (this.profilePhoto) {
+          await axios.post("/api/photo", { profilePhoto: this.profilePhoto }, {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+          });
+        }
 
         // get latest profile
         await this.$store.dispatch("profile");
@@ -132,8 +138,8 @@ export default {
         this.$store.commit("notification", "Profile updated failed!");
       }
     },
-    uploadFile(){
-      this.$refs['profile-photo-input'].$el.click();
+    uploadFile() {
+      this.$refs["profile-photo-input"].$el.click();
     }
   }
 };
