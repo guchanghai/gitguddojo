@@ -15,6 +15,7 @@
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.4",
     "bunyan": "^1.8.12",
+    "cheerio": "^1.0.0-rc.3",
     "connect-ensure-login": "^0.1.1",
     "core-js": "^2.6.5",
     "cors": "^2.8.5",
