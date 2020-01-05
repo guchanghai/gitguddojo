@@ -446,6 +446,6 @@ app.get(URL.CHAT_ROOM, (req, res) => {
   });
 });
 
-http.listen(3001, () => {
+http.listen(3001, "0.0.0.0", () => {
   logger.info('listening on 3001');
 });
