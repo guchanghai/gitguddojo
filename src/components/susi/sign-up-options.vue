@@ -23,10 +23,10 @@
         this.$emit( 'signUpOptions', 'signUpWithEmail' );
       },
       onSignUpWithGoogle(){
-        window.location = 'https://localhost/api/auth/google/';
+        window.location = '/api/auth/google/';
       },
       onSignUpWithFacebook(){
-        window.location = 'https://localhost/api/auth/facebook/';
+        window.location = '/api/auth/facebook/';
       }
     }
   }
