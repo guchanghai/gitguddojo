@@ -30,7 +30,7 @@
     left:0;
     right:0;
     margin: 0 auto;
-    background: url('../assets/r6-background.svg');
+    background: url('../assets/main-background.jpg');
     background-size: cover;
   }
 
