@@ -2,11 +2,15 @@
   <div>
     <div class="friend-card-section">
       <div v-for="friend in recommendFriends" :key="friend.id">
-        <b-container v-if="friend.status !== -1" class="friend-card" :class="friend.status === 1 ? 'selected' : ''">
+        <b-container
+          v-if="friend.status !== -1"
+          class="friend-card"
+          :class="friend.status === 1 ? 'selected' : ''"
+        >
           <b-row class="title">
             <b-col>
               <img class="platform-item-img" src="../../assets/profile-header-icon.png" />
-              <span class="title-text">{{ friend.name }}</span>
+              <span class="title-text">{{ friend.streamId }}</span>
             </b-col>
           </b-row>
           <b-row class="detail">
@@ -37,9 +41,9 @@
           <b-row class="operation">
             <b-col class="operation-title">Top Operations</b-col>
             <b-col class="operation-platform">
-              <img class="operation-item" src="../../assets/operation-a.svg" />
-              <img class="operation-item" src="../../assets/operation-b.svg" />
-              <img class="operation-item" src="../../assets/operation-c.svg" />
+              <img class="operation-item" :src="getImgUrl(friend.operators[0])" />
+              <img class="operation-item" :src="getImgUrl(friend.operators[1])" />
+              <img class="operation-item" :src="getImgUrl(friend.operators[2])" />
             </b-col>
           </b-row>
         </b-container>
@@ -106,6 +110,14 @@ export default {
       }
 
       this.$store.commit("friends", selected);
+    },
+    getImgUrl(pic) {
+      try {
+        const operatorPicName = pic.toUpperCase();
+        return require(`../../assets/${operatorPicName}.png`);
+      } catch (e) {
+        return require(`../../assets/VIGIL.png`);
+      }
     }
   },
   computed: {
@@ -205,6 +217,8 @@ export default {
 }
 
 .operation-item {
+  width: 48px;
+  height: 48px;
   margin: 0px 20px;
 }
 

@@ -14,7 +14,7 @@ function checkDBOperationResult(info, error) {
 
 function getAllUsers() {
   // get all the user info
-  connection.query('SELECT distinct a.*, b.* FROM users a, stream_info b where a.streamId = b.streamId;',
+  connection.query('SELECT distinct a.*, b.* FROM users a left join stream_info b on a.streamId = b.streamId',
     function (error, results) {
       checkDBOperationResult('Read all users', error);
 
@@ -128,7 +128,7 @@ exports.findChatRooms = function (userId, cb) {
   connection.query('SELECT * from chat_rooms WHERE userIds like ? ORDER BY created desc', `%${userId}%`,
     function (error, results) {
       checkDBOperationResult('Find chat room', error);
-      cb(null, results);
+      cb(results);
     });
 }
 

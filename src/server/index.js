@@ -202,7 +202,8 @@ app.post(URL.SIGN_UP,
   });
 
 const getRandomUsers = (amount, currentUserId) => {
-  const allUsers = db.users.records || [];
+  // get all stream users
+  const allUsers = (db.users.records || []).filter( user => !!user.streamId);
   const allAmount = allUsers.length;
   let randomUsers = [];
 
@@ -224,6 +225,7 @@ const getRandomUsers = (amount, currentUserId) => {
     randomUsers = randomUsers.splice(0, 1);
   }
 
+  logger.logger.info( 'Find friends amount:', randomUsers.length );
   return randomUsers;
 };
 
