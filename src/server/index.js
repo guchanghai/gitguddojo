@@ -203,7 +203,7 @@ app.post(URL.SIGN_UP,
 
 const getRandomUsers = (amount, currentUserId) => {
   // get all stream users
-  const allUsers = (db.users.records || []).filter( user => !!user.streamId);
+  const allUsers = (db.users.records || []).filter(user => !!user.streamId);
   const allAmount = allUsers.length;
   let randomUsers = [];
 
@@ -222,10 +222,10 @@ const getRandomUsers = (amount, currentUserId) => {
   randomUsers = randomUsers.filter(randomUser => randomUser.id !== currentUserId);
 
   if (randomUsers.length > amount) {
-    randomUsers = randomUsers.splice(0, 1);
+    randomUsers = randomUsers.slice(0, amount);
   }
 
-  logger.logger.info( 'Find friends amount:', randomUsers.length );
+  logger.logger.info('Find friends amount:', randomUsers.length);
   return randomUsers;
 };
 
