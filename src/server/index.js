@@ -29,6 +29,8 @@ const URL = {
   PHOTO: '/api/photo'
 };
 
+const FRIENDS_MAX_AMOUNT = 4;
+
 // Connect to db
 db.mysql.connect();
 
@@ -199,16 +201,46 @@ app.post(URL.SIGN_UP,
     });
   });
 
+const getRandomUsers = (amount, currentUserId) => {
+  const allUsers = db.users.records || [];
+  const allAmount = allUsers.length;
+  let randomUsers = [];
+
+  // return all users
+  if (allAmount <= amount) {
+    randomUsers = allUsers;
+  } else {
+    // find one more user and then filter
+    while (randomUsers.length < amount + 1 && randomUsers.length !== allAmount) {
+      const newIndex = Math.floor(Math.random() * allAmount);
+      const newUser = allUsers[newIndex];
+      randomUsers.push(newUser);
+    }
+  }
+
+  randomUsers = randomUsers.filter(randomUser => randomUser.id !== currentUserId);
+
+  if (randomUsers.length > amount) {
+    randomUsers = randomUsers.splice(0, 1);
+  }
+
+  return randomUsers;
+};
+
 app.get(URL.FRIENDS,
   require('connect-ensure-login').ensureLoggedIn(URL.SESSION_TIMEOUT),
   function (req, res) {
-    const friends = db.users.records.map((user) => {
+    var randomUsers = getRandomUsers(FRIENDS_MAX_AMOUNT, req.user.id);
+
+    const friends = randomUsers.map((user) => {
       return {
         id: user.id,
         name: user.username,
+        streamId: user.streamId,
+        operators: [user.operator_a, user.operator_b, user.operator_c],
         platforms: ["mxguy", "steam", "xbox"]
       }
-    }).filter(friend => friend.id !== req.user.id);
+    });
 
     res.send({
       friends
