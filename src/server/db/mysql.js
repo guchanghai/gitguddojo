@@ -1,8 +1,28 @@
 var mysql = require('mysql');
 var users = require('./users');
 var Guid = require('guid');
+var logger = require('../../utils/logger');
 
 var connection;
+
+function checkDBOperationResult(info, error) {
+  if (error) {
+    logger.logger.info(`ERROR: ${info} : ${error.stack}`);
+    throw error;
+  }
+}
+
+function getAllUsers() {
+  // get all the user info
+  connection.query('SELECT distinct a.*, b.* FROM users a, stream_info b where a.streamId = b.streamId;',
+    function (error, results) {
+      checkDBOperationResult('Read all users', error);
+
+      logger.logger.info('get all users amount ' + results.length);
+      users.records.length = 0;
+      users.records.push.apply(users.records, results);
+    });
+}
 
 exports.connect = function () {
   connection = mysql.createConnection({
@@ -12,26 +32,20 @@ exports.connect = function () {
     database: 'gitguddojo'
   });
 
-  connection.connect();
+  connection.connect(function (error) {
+    checkDBOperationResult('Connect DB', error);
 
-  // get all the user info
-  connection.query('SELECT * from users', function (error, results) {
-    if (error) throw error;
-    users.records.length = 0;
-    users.records.push.apply(users.records, results);
+    logger.logger.info('connected as id ' + connection.threadId);
+    getAllUsers();
   });
 }
 
 exports.addUser = function (user, cb) {
   connection.query('INSERT INTO users SET ?', user, function (error, results) {
-    if (error) throw error;
+    checkDBOperationResult('Create new user', error);
 
     // get all the user info
-    connection.query('SELECT * from users', function (error, results) {
-      if (error) throw error;
-      users.records.length = 0;
-      users.records.push.apply(users.records, results);
-    });
+    getAllUsers();
 
     // Neat!
     cb(null, results);
@@ -45,18 +59,12 @@ exports.updateUser = function (user, cb) {
   connection.query('UPDATE users SET displayName = ?, username = ?, email = ?, bio = ? WHERE id = ?',
     [user.displayName, user.username, user.email, user.bio, user.id],
     function (error, results) {
+      checkDBOperationResult('Update user', error);
 
       // get all the user info
-      connection.query('SELECT * from users', function (error, results) {
-        if (error) throw error;
-        users.records.length = 0;
-        users.records.push.apply(users.records, results);
-      });
+      getAllUsers();
 
-      if (error)
-        throw error;
-      else // Neat!
-        cb(null, results);
+      cb(null, results);
     });
 }
 
@@ -65,18 +73,12 @@ exports.updateUserPhoto = function (userId, photo, cb) {
   connection.query('UPDATE users SET photo = ? WHERE id = ?',
     [photo, userId],
     function (error, results) {
+      checkDBOperationResult('Update user profile', error);
 
       // get all the user info
-      connection.query('SELECT * from users', function (error, results) {
-        if (error) throw error;
-        users.records.length = 0;
-        users.records.push.apply(users.records, results);
-      });
+      getAllUsers();
 
-      if (error)
-        throw error;
-      else // Neat!
-        cb(null, results);
+      cb(null, results);
     });
 }
 
@@ -84,18 +86,12 @@ exports.updatePassword = function (newUserInfo, cb) {
   connection.query('UPDATE users SET password = ? WHERE id = ?',
     [newUserInfo.newPassword, newUserInfo.id],
     function (error, results) {
+      checkDBOperationResult('Update password', error);
 
       // get all the user info
-      connection.query('SELECT * from users', function (error, results) {
-        if (error) throw error;
-        users.records.length = 0;
-        users.records.push.apply(users.records, results);
-      });
+      getAllUsers();
 
-      if (error)
-        throw error;
-      else // Neat!
-        cb(null, results);
+      cb(null, results);
     });
 }
 
@@ -103,18 +99,12 @@ exports.updateStreamId = function (newUserInfo, cb) {
   connection.query('UPDATE users SET streamId = ? WHERE id = ?',
     [newUserInfo.newStreamId, newUserInfo.id],
     function (error, results) {
+      checkDBOperationResult('Update streamId', error);
 
       // get all the user info
-      connection.query('SELECT * from users', function (error, results) {
-        if (error) throw error;
-        users.records.length = 0;
-        users.records.push.apply(users.records, results);
-      });
+      getAllUsers();
 
-      if (error)
-        throw error;
-      else // Neat!
-        cb(null, results);
+      cb(null, results);
     });
 }
 
@@ -129,20 +119,16 @@ exports.addChatRoom = function (room, cb) {
 
   connection.query('INSERT INTO chat_rooms SET ?', roomInfo,
     function (error, results) {
-      if (error)
-        throw error;
-      else // Neat!
-        cb(null, results);
+      checkDBOperationResult('Create new chat room', error);
+      cb(null, results);
     });
 }
 
 exports.findChatRooms = function (userId, cb) {
   connection.query('SELECT * from chat_rooms WHERE userIds like ? ORDER BY created desc', `%${userId}%`,
     function (error, results) {
-      if (error)
-        throw error;
-      else // Neat!
-        cb(results);
+      checkDBOperationResult('Find chat room', error);
+      cb(null, results);
     });
 }
 
@@ -158,19 +144,15 @@ exports.addChatHistory = function (roomId, message, cb) {
 
   connection.query('INSERT INTO chat_logs SET ?', history,
     function (error) {
-      if (error)
-        throw error;
-      else
-        cb(history);
+      checkDBOperationResult('Save chat log', error);
+      cb(history);
     });
 }
 
 exports.findChatRoomHistory = function (roomId, cb) {
   connection.query('SELECT * from chat_logs WHERE roomId = ? ORDER BY time', roomId,
     function (error, results) {
-      if (error)
-        throw error;
-      else // Neat!
-        cb(results);
+      checkDBOperationResult('Find chat room history', error);
+      cb(results);
     });
 }

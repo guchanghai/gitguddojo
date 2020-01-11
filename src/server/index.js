@@ -7,21 +7,7 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 var db = require('./db');
 var cors = require('cors');
 var Guid = require('guid');
-var bunyan = require('bunyan');
-
-// logger for server index
-var logger = bunyan.createLogger({
-  name: 'gitguddojo',
-  streams: [{
-      level: 'info',
-      path: './log/gitguddojo.log' // log INFO and above to stdout
-    },
-    {
-      level: 'error',
-      path: './log/gitguddojo-error.log' // log ERROR and above to a file
-    }
-  ]
-});
+var logger = require('../utils/logger');
 
 const URL = {
   DEFAULT: '/api',
@@ -187,7 +173,7 @@ app.post(URL.LOGIN,
     failureRedirect: URL.SESSION_TIMEOUT
   }),
   function (req, res) {
-    logger.info('login successfully!');
+    logger.logger.info('login successfully!');
     res.send({
       msg: 'login successfully!'
     });
@@ -447,5 +433,5 @@ app.get(URL.CHAT_ROOM, (req, res) => {
 });
 
 http.listen(3001, "0.0.0.0", () => {
-  logger.info('listening on 3001');
+  logger.logger.info('listening on 3001');
 });
