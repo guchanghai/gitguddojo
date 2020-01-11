@@ -31,10 +31,10 @@
               <b-row align-v="start">
                 <b-col>
                   <b-list-group>
-                    <b-list-group-item>Region</b-list-group-item>
-                    <b-list-group-item>Ranked</b-list-group-item>
-                    <b-list-group-item>Style</b-list-group-item>
-                    <b-list-group-item>Platform</b-list-group-item>
+                    <b-list-group-item @click="lookForGroup">Region</b-list-group-item>
+                    <b-list-group-item @click="lookForGroup">Ranked</b-list-group-item>
+                    <b-list-group-item @click="lookForGroup">Style</b-list-group-item>
+                    <b-list-group-item @click="lookForGroup">Platform</b-list-group-item>
                   </b-list-group>
                 </b-col>
               </b-row>
@@ -144,6 +144,10 @@ export default {
       } else {
         return "< Dashboard";
       }
+    },
+    lookForGroup(evt) {
+      this.$router.replace("/main/friend");
+      evt.preventDefault();
     }
   },
   computed: {
@@ -209,6 +213,10 @@ export default {
 }
 
 .list-group-item {
+  cursor: pointer;
+}
+
+.classify-group-item {
   cursor: pointer;
 }
 </style>
