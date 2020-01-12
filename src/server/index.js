@@ -1,32 +1,32 @@
-var express = require('express');
-const fileUpload = require('express-fileupload');
-var passport = require('passport');
-var Strategy = require('passport-local').Strategy;
-var GoogleStrategy = require('passport-google-oauth20').Strategy;
-var FacebookStrategy = require('passport-facebook').Strategy;
-var db = require('./db');
-var cors = require('cors');
-var Guid = require('guid');
-var logger = require('../utils/logger');
+var express = require("express");
+const fileUpload = require("express-fileupload");
+var passport = require("passport");
+var Strategy = require("passport-local").Strategy;
+var GoogleStrategy = require("passport-google-oauth20").Strategy;
+var FacebookStrategy = require("passport-facebook").Strategy;
+var db = require("./db");
+var cors = require("cors");
+var Guid = require("guid");
+var logger = require("../utils/logger");
 
 const URL = {
-  DEFAULT: '/api',
-  CHAT_ROOMS: '/api/chat/rooms',
-  CHAT_ROOM: '/api/chat/room',
-  FRIENDS: '/api/friends',
-  LOGIN: '/api/login',
-  LOGOUT: '/api/logout',
-  GOOGLE_AUTH: '/api/auth/google',
-  GOOGLE_AUTH_CALLBACK: '/api/auth/google/callback',
-  FACEBOOK_AUTH: '/api/auth/facebook',
-  FACEBOOK_AUTH_CALLBACK: '/api/auth/facebook/callback',
-  PASSWORD: '/api/password',
-  SESSION_TIMEOUT: '/api/sessionTimeout',
-  SIGN_UP: '/api/signUp',
-  STREAM: '/api/stream',
-  MAIN: '/api/main',
-  PROFILE: '/api/profile',
-  PHOTO: '/api/photo'
+  DEFAULT: "/api",
+  CHAT_ROOMS: "/api/chat/rooms",
+  CHAT_ROOM: "/api/chat/room",
+  FRIENDS: "/api/friends",
+  LOGIN: "/api/login",
+  LOGOUT: "/api/logout",
+  GOOGLE_AUTH: "/api/auth/google",
+  GOOGLE_AUTH_CALLBACK: "/api/auth/google/callback",
+  FACEBOOK_AUTH: "/api/auth/facebook",
+  FACEBOOK_AUTH_CALLBACK: "/api/auth/facebook/callback",
+  PASSWORD: "/api/password",
+  SESSION_TIMEOUT: "/api/sessionTimeout",
+  SIGN_UP: "/api/signUp",
+  STREAM: "/api/stream",
+  MAIN: "/api/main",
+  PROFILE: "/api/profile",
+  PHOTO: "/api/photo"
 };
 
 const FRIENDS_MAX_AMOUNT = 4;
@@ -40,9 +40,9 @@ db.mysql.connect();
 // (`username` and `password`) submitted by the user.  The function must verify
 // that the password is correct and then invoke `cb` with a user object, which
 // will be set at `req.user` in route handlers after authentication.
-passport.use(new Strategy(
-  function (username, password, cb) {
-    db.users.findByUsername(username, function (err, user) {
+passport.use(
+  new Strategy(function(username, password, cb) {
+    db.users.findByUsername(username, function(err, user) {
       if (err) {
         return cb(err);
       }
@@ -54,61 +54,75 @@ passport.use(new Strategy(
       }
       return cb(null, user);
     });
-  }));
+  })
+);
 
-const GOOGLE_CLIENT_ID = '446756071190-9itae7ae3rn3ng0859577kq7glm46gj8.apps.googleusercontent.com';
-const GOOGLE_CLIENT_SECRET = 'p0y9u6Qufh8j-FBffpq56iY1';
+const GOOGLE_CLIENT_ID =
+  "446756071190-9itae7ae3rn3ng0859577kq7glm46gj8.apps.googleusercontent.com";
+const GOOGLE_CLIENT_SECRET = "p0y9u6Qufh8j-FBffpq56iY1";
 
-passport.use(new GoogleStrategy({
-    clientID: GOOGLE_CLIENT_ID,
-    clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: `https://www.gitguddojo.com${URL.GOOGLE_AUTH_CALLBACK}`
-  },
-  function (accessToken, refreshToken, profile, cb) {
-    db.users.findOrCreate({
-      ...profile,
-      source: 'google'
-    }, function (err, user, exist) {
-      if (!exist) {
-        try {
-          db.mysql.addUser(user, () => {});
-        } catch (err) {
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_CLIENT_SECRET,
+      callbackURL: `https://www.gitguddojo.com${URL.GOOGLE_AUTH_CALLBACK}`
+    },
+    function(accessToken, refreshToken, profile, cb) {
+      db.users.findOrCreate(
+        {
+          ...profile,
+          source: "google"
+        },
+        function(err, user, exist) {
+          if (!exist) {
+            try {
+              db.mysql.addUser(user, () => {});
+            } catch (err) {
+              return cb(err, user);
+            }
+          }
+
           return cb(err, user);
         }
-      }
-
-      return cb(err, user);
-    });
-  }
-));
+      );
+    }
+  )
+);
 
 // Facebook Auth Sign In
-const FACEBOOK_CLIENT_ID = '460351481337631';
-const FACEBOOK_CLIENT_SECRET = 'a1322f6c68ea384ebccf2f2126220991';
+const FACEBOOK_CLIENT_ID = "460351481337631";
+const FACEBOOK_CLIENT_SECRET = "a1322f6c68ea384ebccf2f2126220991";
 
-passport.use(new FacebookStrategy({
-    clientID: FACEBOOK_CLIENT_ID,
-    clientSecret: FACEBOOK_CLIENT_SECRET,
-    callbackURL: `https://www.gitguddojo.com${URL.FACEBOOK_AUTH_CALLBACK}`,
-    profileFields: ['id', 'name', 'emails']
-  },
-  function (accessToken, refreshToken, profile, cb) {
-    db.users.findOrCreate({
-      ...profile,
-      source: 'facebook'
-    }, function (err, user, exist) {
-      if (!exist) {
-        try {
-          db.mysql.addUser(user, () => {});
-        } catch (err) {
+passport.use(
+  new FacebookStrategy(
+    {
+      clientID: FACEBOOK_CLIENT_ID,
+      clientSecret: FACEBOOK_CLIENT_SECRET,
+      callbackURL: `https://www.gitguddojo.com${URL.FACEBOOK_AUTH_CALLBACK}`,
+      profileFields: ["id", "name", "emails"]
+    },
+    function(accessToken, refreshToken, profile, cb) {
+      db.users.findOrCreate(
+        {
+          ...profile,
+          source: "facebook"
+        },
+        function(err, user, exist) {
+          if (!exist) {
+            try {
+              db.mysql.addUser(user, () => {});
+            } catch (err) {
+              return cb(err, user);
+            }
+          }
+
           return cb(err, user);
         }
-      }
-
-      return cb(err, user);
-    });
-  }
-));
+      );
+    }
+  )
+);
 
 // Configure Passport authenticated session persistence.
 //
@@ -117,12 +131,12 @@ passport.use(new FacebookStrategy({
 // typical implementation of this is as simple as supplying the user ID when
 // serializing, and querying the user record by ID from the database when
 // deserializing.
-passport.serializeUser(function (user, cb) {
+passport.serializeUser(function(user, cb) {
   cb(null, user.id);
 });
 
-passport.deserializeUser(function (id, cb) {
-  db.users.findById(id, function (err, user) {
+passport.deserializeUser(function(id, cb) {
+  db.users.findById(id, function(err, user) {
     if (err) {
       return cb(err);
     }
@@ -132,23 +146,27 @@ passport.deserializeUser(function (id, cb) {
 
 // Create a new Express application.
 var app = express();
-var http = require('http').Server(app);
+var http = require("http").Server(app);
 
 // Enable CSP
 app.use(cors());
 
 // Use application-level middleware for common functionality, including
 // logging, parsing, and session handling.
-app.use(require('morgan')('combined'));
-app.use(require('body-parser').urlencoded({
-  extended: true
-}));
+app.use(require("morgan")("combined"));
+app.use(
+  require("body-parser").urlencoded({
+    extended: true
+  })
+);
 
-app.use(require('express-session')({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: false
-}));
+app.use(
+  require("express-session")({
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: false
+  })
+);
 
 // Initialize Passport and restore authentication state, if any, from the
 // session.
@@ -158,48 +176,47 @@ app.use(passport.session());
 app.use(fileUpload());
 
 // Define routes.
-app.get(URL.DEFAULT,
-  function (req, res) {
-    res.redirect(URL.SESSION_TIMEOUT);
-  });
+app.get(URL.DEFAULT, function(req, res) {
+  res.redirect(URL.SESSION_TIMEOUT);
+});
 
-app.get(URL.SESSION_TIMEOUT,
-  function (req, res) {
-    res.status(401).send({
-      msg: 'login failed or session timeout!'
-    });
+app.get(URL.SESSION_TIMEOUT, function(req, res) {
+  res.status(401).send({
+    msg: "login failed or session timeout!"
   });
+});
 
-app.post(URL.LOGIN,
-  passport.authenticate('local', {
+app.post(
+  URL.LOGIN,
+  passport.authenticate("local", {
     failureRedirect: URL.SESSION_TIMEOUT
   }),
-  function (req, res) {
-    logger.logger.info('login successfully!');
+  function(req, res) {
+    logger.logger.info("login successfully!");
     res.send({
-      msg: 'login successfully!'
+      msg: "login successfully!"
     });
-  });
+  }
+);
 
-app.post(URL.SIGN_UP,
-  function (req, res) {
-    const profile = {
-      id: Guid.raw(),
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password,
-      streamId: req.body.streamId,
-      source: 'own'
-    };
+app.post(URL.SIGN_UP, function(req, res) {
+  const profile = {
+    id: Guid.raw(),
+    username: req.body.username,
+    email: req.body.email,
+    password: req.body.password,
+    streamId: req.body.streamId,
+    source: "own"
+  };
 
-    db.users.findOrCreate(profile, function (err, user) {
-      db.mysql.addUser(user, () => {
-        res.send({
-          user
-        });
+  db.users.findOrCreate(profile, function(err, user) {
+    db.mysql.addUser(user, () => {
+      res.send({
+        user
       });
     });
   });
+});
 
 const getRandomUsers = (amount, currentUserId) => {
   // get all stream users
@@ -212,177 +229,211 @@ const getRandomUsers = (amount, currentUserId) => {
     randomUsers = allUsers;
   } else {
     // find one more user and then filter
-    while (randomUsers.length < amount + 1 && randomUsers.length !== allAmount) {
+    while (
+      randomUsers.length < amount + 1 &&
+      randomUsers.length !== allAmount
+    ) {
       const newIndex = Math.floor(Math.random() * allAmount);
       const newUser = allUsers[newIndex];
-      randomUsers.push(newUser);
+
+      // duplicated user found
+      if (randomUsers.find(existUser => existUser.id === newUser.id)) {
+        continue;
+      } else {
+        randomUsers.push(newUser);
+      }
     }
   }
 
-  randomUsers = randomUsers.filter(randomUser => randomUser.id !== currentUserId);
+  // filter current user
+  randomUsers = randomUsers.filter(
+    randomUser => randomUser.id !== currentUserId
+  );
 
+  // remove extra user
   if (randomUsers.length > amount) {
     randomUsers = randomUsers.slice(0, amount);
   }
 
-  logger.logger.info('Find friends amount:', randomUsers.length);
+  logger.logger.info("Find friends amount:", randomUsers.length);
   return randomUsers;
 };
 
-app.get(URL.FRIENDS,
-  require('connect-ensure-login').ensureLoggedIn(URL.SESSION_TIMEOUT),
-  function (req, res) {
+app.get(
+  URL.FRIENDS,
+  require("connect-ensure-login").ensureLoggedIn(URL.SESSION_TIMEOUT),
+  function(req, res) {
     var randomUsers = getRandomUsers(FRIENDS_MAX_AMOUNT, req.user.id);
 
-    const friends = randomUsers.map((user) => {
+    const friends = randomUsers.map(user => {
       return {
         id: user.id,
         name: user.username,
         streamId: user.streamId,
         operators: [user.operator_a, user.operator_b, user.operator_c],
         platforms: ["mxguy", "steam", "xbox"]
-      }
+      };
     });
 
     res.send({
       friends
     });
-  });
+  }
+);
 
-app.get(URL.MAIN,
-  require('connect-ensure-login').ensureLoggedIn(URL.SESSION_TIMEOUT),
-  function (req, res) {
+app.get(
+  URL.MAIN,
+  require("connect-ensure-login").ensureLoggedIn(URL.SESSION_TIMEOUT),
+  function(req, res) {
     res.send({
-      msg: 'Welcome!'
+      msg: "Welcome!"
     });
-  });
+  }
+);
 
-app.get(URL.LOGOUT,
-  function (req, res) {
-    req.logout();
-    res.send('logout successfully!')
-  });
+app.get(URL.LOGOUT, function(req, res) {
+  req.logout();
+  res.send("logout successfully!");
+});
 
-app.get(URL.PROFILE,
-  require('connect-ensure-login').ensureLoggedIn(URL.SESSION_TIMEOUT),
-  function (req, res) {
+app.get(
+  URL.PROFILE,
+  require("connect-ensure-login").ensureLoggedIn(URL.SESSION_TIMEOUT),
+  function(req, res) {
     res.send({
       user: req.user
     });
-  });
+  }
+);
 
-app.post(URL.PROFILE,
-  require('connect-ensure-login').ensureLoggedIn(URL.SESSION_TIMEOUT),
-  function (req, res) {
+app.post(
+  URL.PROFILE,
+  require("connect-ensure-login").ensureLoggedIn(URL.SESSION_TIMEOUT),
+  function(req, res) {
     const user = req.body;
 
-    db.mysql.updateUser(user, (result) => {
+    db.mysql.updateUser(user, result => {
       res.send({
         result
       });
     });
-  });
+  }
+);
 
-app.post(URL.PHOTO,
-  require('connect-ensure-login').ensureLoggedIn(URL.SESSION_TIMEOUT),
-  function (req, res) {
+app.post(
+  URL.PHOTO,
+  require("connect-ensure-login").ensureLoggedIn(URL.SESSION_TIMEOUT),
+  function(req, res) {
     const photo = req.files;
 
-    db.mysql.updateUserPhoto(req.user.id, photo, (result) => {
+    db.mysql.updateUserPhoto(req.user.id, photo, result => {
       res.send({
         result
       });
     });
-  });
+  }
+);
 
 // Google Auth Sign In
-app.get(URL.GOOGLE_AUTH,
-  passport.authenticate('google', {
-    scope: ['profile', 'email']
-  }));
+app.get(
+  URL.GOOGLE_AUTH,
+  passport.authenticate("google", {
+    scope: ["profile", "email"]
+  })
+);
 
-app.get(URL.GOOGLE_AUTH_CALLBACK,
-  passport.authenticate('google', {
+app.get(
+  URL.GOOGLE_AUTH_CALLBACK,
+  passport.authenticate("google", {
     failureRedirect: URL.SESSION_TIMEOUT
   }),
-  function (req, res) {
+  function(req, res) {
     // Successful authentication, redirect home.
-    res.redirect('/main');
-  });
+    res.redirect("/main");
+  }
+);
 
 // Facebook Auth Sign In
-app.get(URL.FACEBOOK_AUTH,
-  passport.authenticate('facebook', {
-    scope: ['email']
-  }));
+app.get(
+  URL.FACEBOOK_AUTH,
+  passport.authenticate("facebook", {
+    scope: ["email"]
+  })
+);
 
-app.get(URL.FACEBOOK_AUTH_CALLBACK,
-  passport.authenticate('facebook', {
+app.get(
+  URL.FACEBOOK_AUTH_CALLBACK,
+  passport.authenticate("facebook", {
     failureRedirect: URL.SESSION_TIMEOUT
   }),
-  function (req, res) {
+  function(req, res) {
     // Successful authentication, redirect home.
-    res.redirect('/main');
-  });
+    res.redirect("/main");
+  }
+);
 
-app.post(URL.PASSWORD,
-  require('connect-ensure-login').ensureLoggedIn(URL.SESSION_TIMEOUT),
-  function (req, res) {
+app.post(
+  URL.PASSWORD,
+  require("connect-ensure-login").ensureLoggedIn(URL.SESSION_TIMEOUT),
+  function(req, res) {
     const newUserInfo = req.body;
 
-    db.users.findById(newUserInfo.id, function (err, user) {
+    db.users.findById(newUserInfo.id, function(err, user) {
       if (err) {
         res.status(401).send({
-          msg: 'Cannot find the user!'
+          msg: "Cannot find the user!"
         });
         return;
       }
 
       if (user.password !== newUserInfo.oldPassword) {
         res.status(401).send({
-          msg: 'You current password is wrong!'
+          msg: "You current password is wrong!"
         });
         return;
       }
 
-      db.mysql.updatePassword(newUserInfo, (result) => {
+      db.mysql.updatePassword(newUserInfo, result => {
         res.send({
           result
         });
       });
     });
-  });
+  }
+);
 
-app.post(URL.STREAM,
-  require('connect-ensure-login').ensureLoggedIn(URL.SESSION_TIMEOUT),
-  function (req, res) {
+app.post(
+  URL.STREAM,
+  require("connect-ensure-login").ensureLoggedIn(URL.SESSION_TIMEOUT),
+  function(req, res) {
     const newUserInfo = req.body;
 
-    db.users.findById(newUserInfo.id, function (err, user) {
+    db.users.findById(newUserInfo.id, function(err, user) {
       if (err) {
         res.status(401).send({
-          msg: 'Cannot find the user!'
+          msg: "Cannot find the user!"
         });
         return;
       }
 
       if (user.streamId && user.streamId !== newUserInfo.streamId) {
         res.status(401).send({
-          msg: 'You current stream ID is wrong!'
+          msg: "You current stream ID is wrong!"
         });
         return;
       }
 
-      db.mysql.updateStreamId(newUserInfo, (result) => {
+      db.mysql.updateStreamId(newUserInfo, result => {
         res.send({
           result
         });
       });
     });
-  });
+  }
+);
 
 // chat functionality
-var io = require('socket.io')(http);
+var io = require("socket.io")(http);
 
 // live chat rooms
 const chatRooms = [];
@@ -394,38 +445,44 @@ app.post(URL.CHAT_ROOM, (req, res) => {
     const sameUsersAmount = room.users.length === req.body.users.length;
 
     // all users are same
-    return sameUsersAmount && room.users.every(roomUser => req.body.users.find(user => user.id === roomUser.id));
+    return (
+      sameUsersAmount &&
+      room.users.every(roomUser =>
+        req.body.users.find(user => user.id === roomUser.id)
+      )
+    );
   });
 
-  const response = () => res.send({
-    id: room.id,
-    room: room.users
-  });
+  const response = () =>
+    res.send({
+      id: room.id,
+      room: room.users
+    });
 
   // create new room if not found
   if (!room) {
     room = {
       id: Guid.raw(),
       users: req.body.users
-    }
+    };
 
     const roomId = `/api/chat/${room.id}`;
     room.chat = io.of(roomId);
 
-    room.chat.on('connection', function (socket) {
+    room.chat.on("connection", function(socket) {
       // welcome message to the new user
-      socket.emit('welcome-message', {
-        userName: 'System',
+      socket.emit("welcome-message", {
+        userName: "System",
         time: new Date(),
-        message: 'You are in the chat room now!'
+        message: "You are in the chat room now!"
       });
 
       // broadcast the message to everyone in the room
-      socket.on('message', (message) => {
-        db.mysql.addChatHistory(room.id, message, (chatHistory) => {
-          room.chat.emit('broadcast-message', chatHistory);
+      socket.on("message", message => {
+        db.mysql.addChatHistory(room.id, message, chatHistory => {
+          room.chat.emit("broadcast-message", chatHistory);
         });
-      })
+      });
     });
 
     // remember the new room
@@ -436,19 +493,18 @@ app.post(URL.CHAT_ROOM, (req, res) => {
   } else {
     response();
   }
-})
+});
 
 app.get(URL.CHAT_ROOMS, (req, res) => {
   const userId = req.query.userId;
 
-  db.mysql.findChatRooms(userId, (result) => {
-
+  db.mysql.findChatRooms(userId, result => {
     // mark live chat rooms with status=1
     result.forEach(room => {
       if (chatRooms.find(chatRoom => chatRoom.id === room.id)) {
         room.status = 1;
       }
-    })
+    });
 
     res.send({
       rooms: result
@@ -459,7 +515,7 @@ app.get(URL.CHAT_ROOMS, (req, res) => {
 app.get(URL.CHAT_ROOM, (req, res) => {
   const roomId = req.query.roomId;
 
-  db.mysql.findChatRoomHistory(roomId, (result) => {
+  db.mysql.findChatRoomHistory(roomId, result => {
     res.send({
       history: result
     });
@@ -467,5 +523,5 @@ app.get(URL.CHAT_ROOM, (req, res) => {
 });
 
 http.listen(3001, "0.0.0.0", () => {
-  logger.logger.info('listening on 3001');
+  logger.logger.info("listening on 3001");
 });
