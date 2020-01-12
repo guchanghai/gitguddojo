@@ -54,32 +54,16 @@
 </template>
 
 <script>
-import axios from "axios";
-
-const STATUS = {
-  SELECTED: 1,
-  DECLINED: -1,
-  DEFAULT: 0
-};
+import { mapGetters } from "vuex";
+import Constant from "../../constant/app-constants";
 
 export default {
   components: {},
   data() {
-    return {
-      recommendFriends: []
-    };
+    return {};
   },
   mounted() {
-    axios.get("/api/friends").then(
-      function(response) {
-        this.recommendFriends = response.data.friends.map(friend => {
-          return {
-            ...friend,
-            status: STATUS.DEFAULT
-          };
-        });
-      }.bind(this)
-    );
+    this.$store.dispatch("friend");
   },
   methods: {
     startChat() {
@@ -91,21 +75,21 @@ export default {
       const friend = this.recommendFriends.find(
         friend => friend.id === friendId
       );
-      friend.status = STATUS.SELECTED;
+      friend.status = Constant.FRIEND_STATUS.SELECTED;
     },
     decline(friendId) {
       const friend = this.recommendFriends.find(
         friend => friend.id === friendId
       );
-      friend.status = STATUS.DECLINED;
+      friend.status = Constant.FRIEND_STATUS.DECLINED;
     },
     updateFriends() {
       let selected = this.recommendFriends.filter(
-        friend => friend.status === STATUS.SELECTED
+        friend => friend.status === Constant.FRIEND_STATUS.SELECTED
       );
       if (selected.length === 0) {
         selected = this.recommendFriends.filter(
-          friend => friend.status !== STATUS.DECLINED
+          friend => friend.status !== Constant.FRIEND_STATUS.DECLINED
         );
       }
 
@@ -121,6 +105,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(["recommendFriends"]),
     isFriendConfirmed: friendId => {
       const friend = this.recommendFriends.find(
         friend => friend.id === friendId

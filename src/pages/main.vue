@@ -146,7 +146,12 @@ export default {
       }
     },
     lookForGroup(evt) {
-      this.$router.replace("/main/friend");
+      const currentRoute = this.$route.path;
+      if (currentRoute !== "/main/friend") {
+        this.$router.replace("/main/friend");
+      } else {
+        this.$store.dispatch("friend");
+      }
       evt.preventDefault();
     }
   },

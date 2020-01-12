@@ -1,6 +1,6 @@
 <template>
   <div class="footer">
-    <div class="background"/>
+    <div class="background" />
     <b-container class="footer-links">
       <b-row>
         <b-col>About Us</b-col>
@@ -15,43 +15,43 @@
 </template>
 
 <script>
-  import { App } from '../constant/app-constants';
+import { APP_NAME } from "../constant/app-constants";
 
-  export default {
-    data(){
-      return {
-        logoName: App.APP_NAME
-      }
-    }
+export default {
+  data() {
+    return {
+      logoName: APP_NAME
+    };
   }
+};
 </script>
 
 <style scoped>
-  .footer {
-    display: flex;
-    position: relative;
-    text-align: left;
-    font-size: 36px;
-  }
+.footer {
+  display: flex;
+  position: relative;
+  text-align: left;
+  font-size: 36px;
+}
 
-  .background {
-    position: absolute;
-    background-color: red;
-    opacity: 0.6;
-    line-height: 135px;
-    width: 100%;
-    height: 100%;
-  }
+.background {
+  position: absolute;
+  background-color: red;
+  opacity: 0.6;
+  line-height: 135px;
+  width: 100%;
+  height: 100%;
+}
 
-  .footer-links {
-    font-size: 16px;
-    width: 20%;
-    color: white;
-    margin: 15px 0px 15px auto;
-    font-weight: bold;
-  }
+.footer-links {
+  font-size: 16px;
+  width: 20%;
+  color: white;
+  margin: 15px 0px 15px auto;
+  font-weight: bold;
+}
 
-  .col {
-    cursor: pointer;
-  }
+.col {
+  cursor: pointer;
+}
 </style>

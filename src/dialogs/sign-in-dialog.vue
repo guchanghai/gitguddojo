@@ -22,7 +22,7 @@
 </template>
 
 <script>
-  import { App } from '../constant/app-constants';
+  import Constant from '../constant/app-constants';
   import signInWithEmail from '../components/susi/sign-in-with-email';
 
   export default {
@@ -31,7 +31,7 @@
     },
     data(){
       return {
-        logoName: App.APP_NAME,
+        logoName: Constant.APP_NAME,
         signUpOption: ''
       }
     },

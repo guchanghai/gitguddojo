@@ -1,16 +1,16 @@
 <template>
   <div id="app-main">
     <router-view class="view"></router-view>
-    <alert/>
+    <alert />
   </div>
 </template>
 
 <script>
-import { App } from "./constant/app-constants";
+import { APP_NAME } from "./constant/app-constants";
 import alert from "./dialogs/alert";
 
 export default {
-  name: App.APP_NAME,
+  name: APP_NAME,
   components: {
     alert
   }

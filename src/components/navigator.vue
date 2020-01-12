@@ -10,12 +10,12 @@
 </template>
 
 <script>
-import { App } from "../constant/app-constants";
+import { APP_NAME } from "../constant/app-constants";
 
 export default {
   data() {
     return {
-      logoName: App.APP_NAME
+      logoName: APP_NAME
     };
   },
   methods: {

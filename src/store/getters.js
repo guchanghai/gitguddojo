@@ -6,5 +6,6 @@ export default {
     chatHistoryRooms: state => state.chatHistoryRooms,
     chatHistory: state => state.chatHistory,
     mode: state => state.mode,
-    notification: state => state.notification
+    notification: state => state.notification,
+    recommendFriends: state => state.recommendFriends
 };
