@@ -271,7 +271,7 @@ app.get(
         name: user.username,
         streamId: user.streamId,
         operators: [user.operator_a, user.operator_b, user.operator_c],
-        platforms: ["mxguy", "steam", "xbox"]
+        platforms: ["steam"]
       };
     });
 

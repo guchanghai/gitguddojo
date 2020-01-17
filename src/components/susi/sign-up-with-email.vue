@@ -45,7 +45,7 @@ export default {
       form: {
         email: "",
         userName: "",
-        steamId: "",
+        streamId: "",
         password: ""
       },
       show: true
@@ -86,7 +86,7 @@ export default {
       // Reset our form values
       this.form.email = "";
       this.form.userName = "";
-      this.form.steamId = "";
+      this.form.streamId = "";
       this.form.password = "";
 
       // Trick to reset/clear native browser form validation state

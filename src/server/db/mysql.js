@@ -113,7 +113,7 @@ exports.addChatRoom = function (room, cb) {
 
   roomInfo.id = room.id;
   roomInfo.userIDs = room.users.map(user => user.id).join(',');
-  roomInfo.userNames = room.users.map(user => user.name).join(',');
+  roomInfo.userNames = room.users.map(user => user.streamId).join(',');
   roomInfo.created = new Date();
   roomInfo.status = 0; // on going
 

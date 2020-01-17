@@ -99,7 +99,8 @@ export default {
       const chatUsers = this.friends.map(friend => {
         return {
           id: friend.id,
-          name: friend.name
+          name: friend.name,
+          streamId: friend.streamId
         };
       });
 
