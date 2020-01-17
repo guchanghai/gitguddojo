@@ -8,6 +8,7 @@ var db = require("./db");
 var cors = require("cors");
 var Guid = require("guid");
 var logger = require("../utils/logger");
+var FindFriendUtil = require("../utils/findFriends");
 
 const URL = {
   DEFAULT: "/api",
@@ -218,52 +219,14 @@ app.post(URL.SIGN_UP, function(req, res) {
   });
 });
 
-const getRandomUsers = (amount, currentUserId) => {
-  // get all stream users
-  const allUsers = (db.users.records || []).filter(user => !!user.streamId);
-  const allAmount = allUsers.length;
-  let randomUsers = [];
-
-  // return all users
-  if (allAmount <= amount) {
-    randomUsers = allUsers;
-  } else {
-    // find one more user and then filter
-    while (
-      randomUsers.length < amount + 1 &&
-      randomUsers.length !== allAmount
-    ) {
-      const newIndex = Math.floor(Math.random() * allAmount);
-      const newUser = allUsers[newIndex];
-
-      // duplicated user found
-      if (randomUsers.find(existUser => existUser.id === newUser.id)) {
-        continue;
-      } else {
-        randomUsers.push(newUser);
-      }
-    }
-  }
-
-  // filter current user
-  randomUsers = randomUsers.filter(
-    randomUser => randomUser.id !== currentUserId
-  );
-
-  // remove extra user
-  if (randomUsers.length > amount) {
-    randomUsers = randomUsers.slice(0, amount);
-  }
-
-  logger.logger.info("Find friends amount:", randomUsers.length);
-  return randomUsers;
-};
-
 app.get(
   URL.FRIENDS,
   require("connect-ensure-login").ensureLoggedIn(URL.SESSION_TIMEOUT),
   function(req, res) {
-    var randomUsers = getRandomUsers(FRIENDS_MAX_AMOUNT, req.user.id);
+    var randomUsers = FindFriendUtil.findFriends(
+      FRIENDS_MAX_AMOUNT,
+      req.user.id
+    );
 
     const friends = randomUsers.map(user => {
       return {
