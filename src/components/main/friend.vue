@@ -49,7 +49,8 @@
         </b-container>
       </div>
     </div>
-    <b-button type="submit" variant="primary" class="start-chat-button" @click="startChat">OK</b-button>
+    <b-button type="submit" variant="success" class="friend-action-button" @click="lookForGroup">Random</b-button>
+    <b-button type="submit" variant="primary" class="friend-action-button" @click="startChat">OK</b-button>
   </div>
 </template>
 
@@ -102,6 +103,10 @@ export default {
       } catch (e) {
         return require(`../../assets/VIGIL.png`);
       }
+    },
+    lookForGroup(evt) {
+      this.$store.dispatch("friend");
+      evt.preventDefault();
     }
   },
   computed: {
@@ -121,14 +126,14 @@ export default {
   margin: auto 100px;
   display: flex;
   flex-wrap: wrap;
-  height: 620px;
+  height: 520px;
   overflow-y: scroll;
 }
 
 .friend-card {
   background-color: white;
   width: 500px;
-  height: 300px;
+  height: 250px;
   border: 1px solid gray;
   border-radius: 10px;
   margin: 5px 35px;
@@ -139,10 +144,10 @@ export default {
 }
 
 .title {
-  margin: 15px 0px;
+  margin: 5px 0px;
   text-align: left;
   font-size: 36px;
-  min-height: 60px;
+  min-height: 50px;
 }
 
 .title-text {
@@ -191,7 +196,7 @@ export default {
 }
 
 .operation {
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .operation-title {
@@ -207,8 +212,8 @@ export default {
   margin: 0px 20px;
 }
 
-.start-chat-button {
-  margin-top: 10px;
+.friend-action-button {
+  margin: 30px 10px 0 10px;
   bottom: 20px;
   width: 200px;
   height: 50px;
