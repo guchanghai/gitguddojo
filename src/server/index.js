@@ -27,7 +27,8 @@ const URL = {
   STREAM: "/api/stream",
   MAIN: "/api/main",
   PROFILE: "/api/profile",
-  PHOTO: "/api/photo"
+  PHOTO: "/api/photo",
+  VERIFY_STEAM: "/api/verifySteam"
 };
 
 const FRIENDS_MAX_AMOUNT = 4;
@@ -391,6 +392,26 @@ app.post(
           result
         });
       });
+    });
+  }
+);
+
+app.post(
+  URL.VERIFY_STEAM,
+  require("connect-ensure-login").ensureLoggedIn(URL.SESSION_TIMEOUT),
+  function(req, res) {
+    const steamId = req.body.newStreamId;
+
+    db.mysql.checkSteamId(steamId, function(err, steam) {
+      if (!steam) {
+        res.status(404).send({
+          msg: "Cannot verify the stream ID!"
+        });
+      } else {
+        res.send({
+          msg: "stream ID is verified."
+        });
+      }
     });
   }
 );

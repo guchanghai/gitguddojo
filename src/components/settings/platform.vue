@@ -24,7 +24,7 @@
           ></b-form-input>
         </b-col>
         <b-col sm="3" v-if="form.action">
-          <b-button class="verify-btn" type="submit" variant="primary">Verify</b-button>
+          <b-button class="verify-btn" type="submit" variant="primary" @click="onVerify">Verify</b-button>
         </b-col>
       </b-row>
       <b-row>
@@ -92,6 +92,24 @@ export default {
       } catch (error) {
         // Take no action on failure
         this.$store.commit("notification", "Platform updated failed!");
+      }
+    },
+    async onVerify() {
+      try {
+        var request = {
+          id: this.profile.id
+        };
+
+        this.forms.forEach(form => {
+          request[`${form.id}`] = form.value;
+        });
+
+        await axios.post("/api/verifySteam", qs.stringify(request));
+
+        this.$store.commit("notification", "Steam ID verified!");
+      } catch (error) {
+        // Take no action on failure
+        this.$store.commit("notification", "Steam ID cannot verified!");
       }
     }
   }
