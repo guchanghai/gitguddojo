@@ -142,7 +142,7 @@ export default {
       if (this.showDashboard()) {
         return "My Dojo";
       } else {
-        return "< Dashboard";
+        return "< Look For Group";
       }
     },
     lookForGroup(evt) {
