@@ -26,15 +26,14 @@
             </div>
             <div v-else>
               <b-row align-v="start">
-                <b-col class="bar-middle-header">LFG Settings</b-col>
+                <b-col class="bar-middle-header">Profile</b-col>
               </b-row>
               <b-row align-v="start">
                 <b-col>
                   <b-list-group>
-                    <b-list-group-item @click="lookForGroup">Region</b-list-group-item>
-                    <b-list-group-item @click="lookForGroup">Ranked</b-list-group-item>
-                    <b-list-group-item @click="lookForGroup">Style</b-list-group-item>
-                    <b-list-group-item @click="lookForGroup">Platform</b-list-group-item>
+                    <b-list-group-item @click="showProfile">Edit Profile</b-list-group-item>
+                    <b-list-group-item @click="changePassword">Change Password</b-list-group-item>
+                    <b-list-group-item @click="editPlatform">Edit Platform ID</b-list-group-item>
                   </b-list-group>
                 </b-col>
               </b-row>
@@ -118,14 +117,17 @@ export default {
       return this.mode === MODE.dashboard;
     },
     showProfile(evt) {
+      this.changeToProfile();
       this.$router.replace("/main/profile");
       evt.preventDefault();
     },
     changePassword(evt) {
+      this.changeToProfile();
       this.$router.replace("/main/password");
       evt.preventDefault();
     },
     editPlatform(evt) {
+      this.changeToProfile();
       this.$router.replace("/main/platform");
       evt.preventDefault();
     },
@@ -143,6 +145,11 @@ export default {
         return "My Dojo";
       } else {
         return "< Look For Group";
+      }
+    },
+    changeToProfile() {
+      if (this.showDashboard()) {
+        this.$store.commit("mode", MODE.profile);
       }
     },
     lookForGroup(evt) {
