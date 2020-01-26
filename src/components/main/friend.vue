@@ -49,7 +49,12 @@
         </b-container>
       </div>
     </div>
-    <b-button type="submit" variant="success" class="friend-action-button" @click="lookForGroup">Random</b-button>
+    <b-button
+      type="submit"
+      variant="success"
+      class="friend-action-button"
+      @click="lookForGroup"
+    >Restart</b-button>
     <b-button type="submit" variant="primary" class="friend-action-button" @click="startChat">OK</b-button>
   </div>
 </template>
@@ -83,6 +88,18 @@ export default {
         friend => friend.id === friendId
       );
       friend.status = Constant.FRIEND_STATUS.DECLINED;
+
+      this.checkFriends();
+    },
+    checkFriends() {
+      const selected = this.recommendFriends.filter(
+        friend => friend.status !== Constant.FRIEND_STATUS.DECLINED
+      );
+
+      // Restart if no friend selected
+      if (selected.length === 0) {
+        this.$store.dispatch("friend");
+      }
     },
     updateFriends() {
       let selected = this.recommendFriends.filter(
