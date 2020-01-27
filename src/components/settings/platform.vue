@@ -109,7 +109,7 @@ export default {
         this.$store.commit("notification", "Steam ID verified!");
       } catch (error) {
         // Take no action on failure
-        this.$store.commit("notification", "Steam ID cannot verified!");
+        this.$store.commit("notification", "Steam ID cannot be verified!");
       }
     }
   }
