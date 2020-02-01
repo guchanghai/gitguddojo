@@ -1,9 +1,12 @@
 var db = require("../server/db");
 var logger = require("./logger");
 
-/*var Constant = require("../constant/app-constants");
+const findUserMode = 1; // 0: random; 1: flg v0
 
-const findCategory = (majorCategory, role) => {
+const appConstant = require("../constant/app-constants");
+const Constant = appConstant.default;
+
+exports.findCategory = role => {
   if (!role) {
     return undefined;
   }
@@ -13,13 +16,15 @@ const findCategory = (majorCategory, role) => {
   const foundMajor = Object.keys(Constant.OPERATORS).find(major => {
     const majorCategory = Constant.OPERATORS[major];
     return (category = Object.keys(majorCategory).find(operator =>
-      operator.includes(role)
+      majorCategory[operator].includes(role)
     ));
   });
 
-  logger.info("find user category for current user", foundMajor, category);
+  if (logger.info) {
+    logger.info("find user category for current user", foundMajor, category);
+  }
 
-  return category;
+  return { major: foundMajor, category };
 };
 
 const currentUserRole = currentUserId => {
@@ -36,9 +41,6 @@ const currentUserRole = currentUserId => {
 
   logger.info("current user is in the categories: ", roles.join(","));
 };
-
-exports.currentUserRole = currentUserRole;
-*/
 
 exports.findFriends = (amount, currentUserId) => {
   // get all stream users
@@ -62,12 +64,15 @@ exports.findFriends = (amount, currentUserId) => {
       if (randomUsers.find(existUser => existUser.id === newUser.id)) {
         continue;
       } else {
-        randomUsers.push(newUser);
+        if (findUserMode === 1) {
+          // get current user
+          const currentUserCharacter = currentUserRole(currentUserId);
+        } else {
+          randomUsers.push(newUser);
+        }
       }
     }
   }
-
-  // currentUserRole(currentUserId);
 
   // filter current user
   randomUsers = randomUsers.filter(
