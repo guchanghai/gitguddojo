@@ -28,7 +28,7 @@
           </div>
           <div v-else-if="form.type === 'textarea'">
             <b-form-textarea
-              placeholder="Passionate about R6. Diamond player. Looking for serious, communicative team player to rank up together."
+              placeholder=""
               rows="4"
               max-rows="6"
               v-model="form.value"
