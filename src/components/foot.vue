@@ -15,12 +15,12 @@
 </template>
 
 <script>
-import { APP_NAME } from "../constant/app-constants";
+import { CONST } from "../constant/app-constants";
 
 export default {
   data() {
     return {
-      logoName: APP_NAME
+      logoName: CONST.APP_NAME
     };
   }
 };

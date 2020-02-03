@@ -61,7 +61,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import Constant from "../../constant/app-constants";
+import { CONST } from "../../constant/app-constants";
 
 export default {
   components: {},
@@ -81,19 +81,19 @@ export default {
       const friend = this.recommendFriends.find(
         friend => friend.id === friendId
       );
-      friend.status = Constant.FRIEND_STATUS.SELECTED;
+      friend.status = CONST.FRIEND_STATUS.SELECTED;
     },
     decline(friendId) {
       const friend = this.recommendFriends.find(
         friend => friend.id === friendId
       );
-      friend.status = Constant.FRIEND_STATUS.DECLINED;
+      friend.status = CONST.FRIEND_STATUS.DECLINED;
 
       this.checkFriends();
     },
     checkFriends() {
       const selected = this.recommendFriends.filter(
-        friend => friend.status !== Constant.FRIEND_STATUS.DECLINED
+        friend => friend.status !== CONST.FRIEND_STATUS.DECLINED
       );
 
       // Restart if no friend selected
@@ -103,11 +103,11 @@ export default {
     },
     updateFriends() {
       let selected = this.recommendFriends.filter(
-        friend => friend.status === Constant.FRIEND_STATUS.SELECTED
+        friend => friend.status === CONST.FRIEND_STATUS.SELECTED
       );
       if (selected.length === 0) {
         selected = this.recommendFriends.filter(
-          friend => friend.status !== Constant.FRIEND_STATUS.DECLINED
+          friend => friend.status !== CONST.FRIEND_STATUS.DECLINED
         );
       }
 

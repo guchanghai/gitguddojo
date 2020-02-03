@@ -6,11 +6,11 @@
 </template>
 
 <script>
-import { APP_NAME } from "./constant/app-constants";
+import { CONST } from "./constant/app-constants";
 import alert from "./dialogs/alert";
 
 export default {
-  name: APP_NAME,
+  name: CONST.APP_NAME,
   components: {
     alert
   }

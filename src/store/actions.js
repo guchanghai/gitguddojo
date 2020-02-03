@@ -1,5 +1,5 @@
 import axios from "axios";
-import Constant from "../constant/app-constants";
+import { CONST } from "../constant/app-constants";
 
 export default {
   async profile({ commit }) {
@@ -11,7 +11,7 @@ export default {
     const recommendFriends = friends.data.friends.map(friend => {
       return {
         ...friend,
-        status: Constant.FRIEND_STATUS.DEFAULT
+        status: CONST.FRIEND_STATUS.DEFAULT
       };
     });
     commit("recommendFriends", recommendFriends);

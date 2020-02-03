@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { APP_NAME } from "../constant/app-constants";
+import { CONST } from "../constant/app-constants";
 import signUpOptions from "../components/susi/sign-up-options";
 import signUpWithEmail from "../components/susi/sign-up-with-email";
 
@@ -37,7 +37,7 @@ export default {
   },
   data() {
     return {
-      logoName: APP_NAME,
+      logoName: CONST.APP_NAME,
       signUpOption: ""
     };
   },

@@ -1,4 +1,4 @@
-const CONST = {
+exports.CONST = {
   APP_NAME: "GitGudDojo",
   FRIEND_STATUS: {
     SELECTED: 1,
@@ -18,7 +18,7 @@ const CONST = {
     DEFENDER: {
       DEEP_ROAMER: [
         "VIGIL",
-        "JAEGER",
+        "JAGER",
         "BANDIT",
         "ELA",
         "MOZZIE",
@@ -33,5 +33,3 @@ const CONST = {
     }
   }
 };
-
-export default CONST;
