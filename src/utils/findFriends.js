@@ -1,6 +1,7 @@
 var db = require("../server/db");
 var logger = require("./logger");
 var appConstant = require("../constant/app-constants");
+var axios = require("axios");
 
 const Constant = appConstant.CONST;
 
@@ -187,4 +188,39 @@ exports.findFriends = (amount, currentUserId) => {
   }
 
   return recommendFriends;
+};
+
+exports.getProfileBySteamId = steamId => {
+  if (!steamId) {
+    logger.logger.error("Steam ID is required");
+  }
+
+  const platforms = ["pc", "xbox", "psn"];
+  const profileUrlBase = "https://r6.tracker.network/profile";
+  const operatorResult = [];
+
+  platforms.find( platform => {
+    const profileUrl = `${profileUrlBase}/${platform}/${steamId}`;
+    const resp = axios.get( profileUrl );
+
+    logger.logger.error(`Find user at ${profileUrl}`);
+
+    var operators = resp.data.match(/\/images\/badge-[a-z]*\./g);
+
+    if (Array.isArray(operators) && operators.length) {
+      operators.forEach(operator => {
+        operatorResult.push(
+          operator
+            .substring(operator.indexOf("-") + 1, operator.indexOf("."))
+            .toUpperCase()
+        );
+      });
+
+      return true;
+    } else {
+      return false;
+    }
+  });
+
+  return operatorResult;
 };

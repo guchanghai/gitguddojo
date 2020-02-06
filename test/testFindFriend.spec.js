@@ -38,4 +38,9 @@ describe("Test lfg v0 function", () => {
 
     expect(FindFriendUtil.isUserSimilar(userARoles, userBRoles)).toBe(false);
   });
+
+  test("verify user profile Id", async () => {
+    const result = FindFriendUtil.getProfileBySteamId("Nimerz_YT");
+    expect(result).toBe("abc");
+  });
 });

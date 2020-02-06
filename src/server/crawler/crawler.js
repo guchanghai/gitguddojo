@@ -18,10 +18,12 @@ var logger = bunyan.createLogger({
 var axios = require("axios");
 var cheerio = require("cheerio");
 
-var page = 1;
+var page = 23;
 const server = "r6.tracker.network";
 
 var loadPlayersByPage = async pageIndex => {
+  console.log("Get page", pageIndex, " for playes");
+
   var players = [];
 
   var getData = async i => {
