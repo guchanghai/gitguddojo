@@ -404,8 +404,24 @@ app.post(
 
     db.mysql.checkSteamId(steamId, function(err, steam) {
       if (!steam) {
-        res.status(404).send({
-          msg: "Cannot verify the stream ID!"
+        FindFriendUtil.getProfileBySteamId(steamId, steamUserOperators => {
+          if (steamUserOperators && Array.isArray(steamUserOperators)) {
+            db.mysql.addSteamId(
+              steamId,
+              steamUserOperators[0],
+              steamUserOperators[1],
+              steamUserOperators[2],
+              () => {
+                res.send({
+                  msg: "stream ID is verified online."
+                });
+              }
+            );
+          } else {
+            res.status(404).send({
+              msg: "Cannot verify this stream ID!"
+            });
+          }
         });
       } else {
         res.send({

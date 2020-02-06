@@ -190,37 +190,61 @@ exports.findFriends = (amount, currentUserId) => {
   return recommendFriends;
 };
 
-exports.getProfileBySteamId = steamId => {
+exports.getProfileBySteamId = (steamId, cb) => {
   if (!steamId) {
     logger.logger.error("Steam ID is required");
   }
 
   const platforms = ["pc", "xbox", "psn"];
   const profileUrlBase = "https://r6.tracker.network/profile";
-  const operatorResult = [];
 
-  platforms.find( platform => {
+  const getProfileOnPlatform = platform => {
     const profileUrl = `${profileUrlBase}/${platform}/${steamId}`;
-    const resp = axios.get( profileUrl );
-
     logger.logger.error(`Find user at ${profileUrl}`);
 
-    var operators = resp.data.match(/\/images\/badge-[a-z]*\./g);
+    return axios
+      .get(profileUrl)
+      .then(resp => {
+        const operatorResult = [];
+        var operators = resp.data.match(/\/images\/badge-[a-z]*\./g);
 
-    if (Array.isArray(operators) && operators.length) {
-      operators.forEach(operator => {
-        operatorResult.push(
-          operator
-            .substring(operator.indexOf("-") + 1, operator.indexOf("."))
-            .toUpperCase()
-        );
+        if (Array.isArray(operators) && operators.length) {
+          operators.forEach(operator => {
+            operatorResult.push(
+              operator
+                .substring(operator.indexOf("-") + 1, operator.indexOf("."))
+                .toUpperCase()
+            );
+          });
+
+          return operatorResult;
+        } else {
+          return undefined;
+        }
+      })
+      .catch(function() {
+        // handle error
+        return undefined;
       });
+  };
 
-      return true;
+  getProfileOnPlatform(platforms[0]).then(result => {
+    if (result) {
+      cb(result);
     } else {
-      return false;
+      getProfileOnPlatform(platforms[1]).then(result => {
+        if (result) {
+          cb(result);
+        } else {
+          getProfileOnPlatform(platforms[2]).then(result => {
+            if (result) {
+              cb(result);
+            } else {
+              cb();
+            }
+          });
+        }
+      });
     }
   });
-
-  return operatorResult;
 };

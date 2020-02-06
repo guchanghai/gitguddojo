@@ -116,6 +116,21 @@ exports.checkSteamId = function(steamId, cb) {
   );
 };
 
+exports.addSteamId = function(steamId, operatorA, operatorB, operatorC, cb) {
+
+  const steamInfo = {};
+
+  steamInfo.streamId = steamId;
+  steamInfo.operator_a = operatorA;
+  steamInfo.operator_b = operatorB;
+  steamInfo.operator_c = operatorC;
+
+  connection.query("INSERT INTO stream_info SET ?", steamInfo, function(error) {
+    checkDBOperationResult("Save steamId log", error);
+    cb(steamInfo);
+  });
+};
+
 exports.updateStreamId = function(newUserInfo, cb) {
   connection.query(
     "UPDATE users SET streamId = ? WHERE id = ?",
