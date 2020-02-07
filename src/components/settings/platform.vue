@@ -104,6 +104,11 @@ export default {
           request[`${form.id}`] = form.value;
         });
 
+        this.$store.commit("notification", {
+          content: "Verifying the steam ID...",
+          dismissSecs: 30
+        });
+
         await axios.post("/api/verifySteam", qs.stringify(request));
 
         this.$store.commit("notification", "Steam ID verified!");
