@@ -56,16 +56,23 @@ export default {
       }
     };
   },
-  mounted() {
-    const self = this;
-    this.joinChatRoom().then(roomId => {
-      // set
-      // to include the new created room
-      self.findChatHistory().then(() => {
-        // Set current room ID
-        this.$store.commit("currentChatRoom", roomId);
-      });
-    });
+  async mounted() {
+    let activeRoomId;
+
+    // Create new room if new friends selected
+    if (this.friends && this.friends.length) {
+      activeRoomId = await this.joinChatRoom();
+
+      // Clear the friends selected
+      this.$store.commit("friends", []);
+    }
+
+    // Find history rooms
+    await this.findChatHistory();
+
+    activeRoomId = activeRoomId || this.chatHistoryRooms[0].id;
+
+    this.$store.commit("currentChatRoom", activeRoomId);
   },
   methods: {
     initOptions() {},
@@ -95,7 +102,7 @@ export default {
           }.bind(this)
         );
     },
-    joinChatRoom() {
+    async joinChatRoom() {
       const chatUsers = this.friends.map(friend => {
         return {
           id: friend.id,
@@ -109,45 +116,49 @@ export default {
         name: this.profile.username
       });
 
-      return axios
-        .post(
-          "/api/chat/room",
-          qs.stringify({
-            users: chatUsers
-          })
-        )
-        .then(
-          function(response) {
-            const roomId = response.data.id;
+      const response = await axios.post(
+        "/api/chat/room",
+        qs.stringify({
+          users: chatUsers
+        })
+      );
 
-            this.socket = io.connect(`/api/chat/${roomId}`);
-            this.socket.on(
-              "welcome-message",
-              function(message) {
-                this.$store.commit("chatHistory", []);
-                this.$store.commit("chatMessage", message);
-              }.bind(this)
-            );
-            this.socket.on(
-              "broadcast-message",
-              function(message) {
-                this.$store.commit("chatMessage", message);
+      const roomId = response.data.id;
 
-                setTimeout(() => {
-                  this.$el.querySelector("#messages").scrollTop =
-                    this.$el.querySelector("#messages").scrollHeight + 112;
-                }, 500);
-              }.bind(this)
-            );
+      this.socket = io.connect(`/api/chat/${roomId}`);
 
-            // Set current room ID
-            return roomId;
-          }.bind(this)
-        );
+      this.socket.on(
+        "welcome-message",
+        function(message) {
+          this.$store.commit("chatHistory", []);
+          this.$store.commit("chatMessage", message);
+        }.bind(this)
+      );
+
+      this.socket.on(
+        "broadcast-message",
+        function(message) {
+          this.$store.commit("chatMessage", message);
+
+          setTimeout(() => {
+            this.$el.querySelector("#messages").scrollTop =
+              this.$el.querySelector("#messages").scrollHeight + 112;
+          }, 500);
+        }.bind(this)
+      );
+
+      // Set current room ID
+      return roomId;
     }
   },
   computed: {
-    ...mapGetters(["profile", "friends", "chatHistory", "currentChatRoom"]),
+    ...mapGetters([
+      "profile",
+      "friends",
+      "chatHistory",
+      "currentChatRoom",
+      "chatHistoryRooms"
+    ]),
     chatUsersAmount() {
       return (this.currentChatRoom.userNames || "").split(",").length;
     },

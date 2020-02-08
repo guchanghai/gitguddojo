@@ -51,6 +51,12 @@
     </div>
     <b-button
       type="submit"
+      variant="info"
+      class="friend-action-button"
+      @click="goToChat"
+    >Back to chat</b-button>
+    <b-button
+      type="submit"
       variant="success"
       class="friend-action-button"
       @click="lookForGroup"
@@ -72,10 +78,16 @@ export default {
     this.$store.dispatch("friend");
   },
   methods: {
-    startChat() {
+    startChat(evt) {
       this.updateFriends();
       this.$store.commit("mode", "chat");
       this.$router.replace("/main/chat");
+      evt.preventDefault();
+    },
+    goToChat(evt) {
+      this.$store.commit("mode", "chat");
+      this.$router.replace("/main/chat");
+      evt.preventDefault();
     },
     confirm(friendId) {
       const friend = this.recommendFriends.find(
