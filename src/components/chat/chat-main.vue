@@ -57,20 +57,27 @@ export default {
     };
   },
   async mounted() {
-    let activeRoomId;
+    let activeRoom;
 
     // Create new room if new friends selected
     if (this.friends && this.friends.length) {
-      activeRoomId = await this.joinChatRoom();
+      activeRoom = await this.joinChatRoom();
 
       // Clear the friends selected
       this.$store.commit("friends", []);
+
+      // Set active room
+      this.$store.commit("activeRoom", activeRoom);
+    } else {
+      // restore the communication channel
+      this.socket = this.activeRoom.socket;
     }
 
     // Find history rooms
     await this.findChatHistory();
 
-    activeRoomId = activeRoomId || this.chatHistoryRooms[0].id;
+    // Select the first room
+    const activeRoomId = activeRoom ? activeRoom.id : this.chatHistoryRooms[0].id;
 
     this.$store.commit("currentChatRoom", activeRoomId);
   },
@@ -148,11 +155,15 @@ export default {
       );
 
       // Set current room ID
-      return roomId;
+      return {
+        id: roomId,
+        socket: this.socket
+      };
     }
   },
   computed: {
     ...mapGetters([
+      "activeRoom",
       "profile",
       "friends",
       "chatHistory",
@@ -169,7 +180,7 @@ export default {
       return this.chatHistory;
     },
     isCurrentChatActive() {
-      return this.currentChatRoom && this.currentChatRoom.status === 1;
+      return this.currentChatRoom && this.currentChatRoom.status === 1 && this.currentChatRoom.id === this.activeRoom.id;
     }
   }
 };

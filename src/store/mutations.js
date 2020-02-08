@@ -10,6 +10,9 @@ export default {
       room => room.id === currentChatRoomId
     );
   },
+  activeRoom(state, activeRoom) {
+    state.activeRoom = activeRoom;
+  },
   chatHistoryRooms(state, chatHistoryRooms) {
     state.chatHistoryRooms = chatHistoryRooms;
   },
