@@ -27,12 +27,7 @@
             ></b-form-file>
           </div>
           <div v-else-if="form.type === 'textarea'">
-            <b-form-textarea
-              placeholder=""
-              rows="4"
-              max-rows="6"
-              v-model="form.value"
-            ></b-form-textarea>
+            <b-form-textarea placeholder rows="4" max-rows="6" v-model="form.value"></b-form-textarea>
           </div>
           <div v-else>
             <b-form-input
@@ -82,6 +77,11 @@ export default {
           value: ""
         },
         {
+          id: "streamId",
+          name: "Steam ID",
+          type: "text"
+        },
+        {
           id: "bio",
           name: "Bio",
           type: "textarea",
@@ -106,6 +106,9 @@ export default {
     this.forms.forEach(form => {
       form.value = profile[`${form.id}`];
     });
+
+    // edit steam ID on "Edit Platform ID"
+    document.getElementById("streamId").setAttribute("readonly", "readonly");
   },
   computed: mapGetters(["profile"]),
   methods: {
@@ -122,11 +125,15 @@ export default {
         await axios.post("/api/profile", qs.stringify(request));
 
         if (this.profilePhoto) {
-          await axios.post("/api/photo", { profilePhoto: this.profilePhoto }, {
-            headers: {
-              "Content-Type": "multipart/form-data"
+          await axios.post(
+            "/api/photo",
+            { profilePhoto: this.profilePhoto },
+            {
+              headers: {
+                "Content-Type": "multipart/form-data"
+              }
             }
-          });
+          );
         }
 
         // get latest profile
