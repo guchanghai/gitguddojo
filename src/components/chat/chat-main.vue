@@ -1,6 +1,6 @@
 <template>
   <!-- Chat Modal dialog -->
-  <div>
+  <div v-if="dataReady">
     <div class="chat-content">
       <div class="chat-header">
         <div>{{chatUsers}}</div>
@@ -12,7 +12,7 @@
         </div>
       </div>
       <b-list-group id="messages">
-        <div v-for="message in chatHistory" :key="message.time.toString()">
+        <div v-for="message in chatMessage" :key="message.time.toString()">
           <b-list-group-item>
             <div class="message-content">
               <div class="message-header">
@@ -43,13 +43,14 @@
 <script>
 import axios from "axios";
 import { mapGetters } from "vuex";
-import io from "socket.io-client";
 import qs from "qs";
 
 export default {
   components: {},
   data() {
     return {
+      socket: null,
+      dataReady: false,
       historyRooms: [],
       form: {
         message: ""
@@ -57,39 +58,47 @@ export default {
     };
   },
   async mounted() {
-    let activeRoom;
+    let activeRoomId;
 
     // Create new room if new friends selected
     if (this.friends && this.friends.length) {
-      activeRoom = await this.joinChatRoom();
+      // create a new room
+      activeRoomId = await this.createChatRoom();
 
       // Clear the friends selected
       this.$store.commit("friends", []);
-
-      // Set active room
-      this.$store.commit("activeRoom", activeRoom);
-    } else {
-      // restore the communication channel
-      this.socket = this.activeRoom.socket;
     }
 
     // Find history rooms
     await this.findChatHistory();
 
-    // Select the first room
-    const activeRoomId = activeRoom ? activeRoom.id : this.chatHistoryRooms[0].id;
+    // Continue the current room or select the first room
+    if (!activeRoomId) {
+      if (this.currentChatRoomId) {
+        activeRoomId = this.currentChatRoomId;
+      } else if (this.chatHistoryRooms[0]) {
+        activeRoomId = this.chatHistoryRooms[0].id;
+      }
+    }
 
-    this.$store.commit("currentChatRoom", activeRoomId);
+    // Set the new room or the first histroy room as the active room
+    if (activeRoomId) {
+      await this.$store.dispatch("changeRoom", activeRoomId);
+    }
+
+    this.dataReady = true;
   },
   methods: {
     initOptions() {},
     onSubmit() {
-      this.socket.emit("message", {
-        from: this.profile.username,
-        userId: this.profile.id,
-        message: this.form.message
-      });
-      this.form.message = "";
+      if (this.activeSocket && this.activeSocket.emit) {
+        this.activeSocket.emit("message", {
+          from: this.profile.username,
+          userId: this.profile.id,
+          message: this.form.message
+        });
+        this.form.message = "";
+      }
     },
     keyMonitor() {
       if (event.key == "Enter") {
@@ -109,7 +118,7 @@ export default {
           }.bind(this)
         );
     },
-    async joinChatRoom() {
+    async createChatRoom() {
       const chatUsers = this.friends.map(friend => {
         return {
           id: friend.id,
@@ -131,43 +140,23 @@ export default {
       );
 
       const roomId = response.data.id;
-
-      this.socket = io.connect(`/api/chat/${roomId}`);
-
-      this.socket.on(
-        "welcome-message",
-        function(message) {
-          this.$store.commit("chatHistory", []);
-          this.$store.commit("chatMessage", message);
-        }.bind(this)
-      );
-
-      this.socket.on(
-        "broadcast-message",
-        function(message) {
-          this.$store.commit("chatMessage", message);
-
-          setTimeout(() => {
-            this.$el.querySelector("#messages").scrollTop =
-              this.$el.querySelector("#messages").scrollHeight + 112;
-          }, 500);
-        }.bind(this)
-      );
-
-      // Set current room ID
-      return {
-        id: roomId,
-        socket: this.socket
-      };
+      return roomId;
+    },
+    scrollMessage() {
+      setTimeout(() => {
+        this.$el.querySelector("#messages").scrollTop =
+          this.$el.querySelector("#messages").scrollHeight + 112;
+      }, 500);
     }
   },
   computed: {
     ...mapGetters([
-      "activeRoom",
+      "activeSocket",
       "profile",
       "friends",
       "chatHistory",
       "currentChatRoom",
+      "currentChatRoomId",
       "chatHistoryRooms"
     ]),
     chatUsersAmount() {
@@ -177,10 +166,12 @@ export default {
       return this.currentChatRoom.userNames;
     },
     chatMessage() {
+      this.scrollMessage();
       return this.chatHistory;
     },
     isCurrentChatActive() {
-      return this.currentChatRoom && this.currentChatRoom.status === 1 && this.currentChatRoom.id === this.activeRoom.id;
+      // status === 1 means the room is open at the server side
+      return this.currentChatRoom && this.currentChatRoom.status === 1;
     }
   }
 };

@@ -31,18 +31,7 @@ export default {
   mounted() {},
   methods: {
     onItemSelect(roomId) {
-      axios
-        .get("/api/chat/room", {
-          params: {
-            roomId
-          }
-        })
-        .then(
-          function(response) {
-            this.$store.commit("chatHistory", response.data.history);
-            this.$store.commit("currentChatRoom", roomId);
-          }.bind(this)
-        );
+          this.$store.dispatch( 'changeRoom', roomId);
     },
     isCurrentRoom( roomId ){
       return roomId === this.currentChatRoomId;

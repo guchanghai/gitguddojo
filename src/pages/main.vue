@@ -133,6 +133,9 @@ export default {
     },
     async signOut(evt) {
       try {
+        this.commit( "currentChatRoom", "");
+        this.commit( "chatMessage", "");
+        this.commit( "profile", "");
         await axios.get("/api/logout/");
       } catch (e) {
         // TODO: logging

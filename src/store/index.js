@@ -14,7 +14,7 @@ export default new Vuex.Store({
         friends: [],
         recommendFriends: [],
         currentChatRoom: {},
-        activeRoom: '',
+        activeSocket: '',
         chatHistoryRooms: [],
         chatHistory: [],
         mode: '',
